@@ -11,13 +11,7 @@ app = Flask(__name__)
 
 # Get Databasedir
 MYLOGIN = "smit1618"
-
-# DATABASE="/homes/"+MYLOGIN+"/MyLink/picture_share.db"
-
-#DATABASE = "/picture_share.db"
 DATABASE = 'picture_share.db'
-# IMAGEPATH="/homes/"+MYLOGIN+"/MyLink/images
-
 IMAGEPATH = 'images'
 
 
@@ -78,9 +72,9 @@ def display_admin_options(user, session):
     html = """
         <H1> Picture Share Admin Options</H1>
         <ul>
-        <li> <a href="login.cgi?action=new-album&user={user}&session={session}">Create new album</a>
-        <li> <a href="login.cgi?action=upload&user={user}&session={session}">Upload Picture</a>
-        <li> <a href="/upload">Show Image</a>
+        <li> <a href="/new_album">Create new album</a>
+        <li> <a href="/upload">Upload Picture</a>
+        <li> <a href="/show_image">Show Image</a>
         <li> Delete album
         <li> Make album public
         <li> Change pasword
@@ -204,7 +198,8 @@ def login_post(username, password, db):
         session["username"] = username;
         return display_admin_options(username, session)
     else:
-        return login_form()
+        return render_template("Login.html",
+                               login_failed='Yes')
 
 
 def main():

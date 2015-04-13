@@ -27,6 +27,9 @@
         <INPUT TYPE=hidden NAME="action" VALUE="login">
         <INPUT TYPE=submit VALUE="Enter">
     </form>
+    {% if login_failed=='Yes' %}
+        <h3>Login Failed, Please try again</h3>
+    {% endif %}
 </div>
 
 </body>

@@ -8,7 +8,6 @@ import os, cgi
 
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 DATABASE = os.path.join(PROJECT_ROOT, 'picture_share.db')
-# IMAGEPATH = os.path.join(PROJECT_ROOT, 'images')
 IMAGEPATH = 'images/'
 DEBUG = True
 SECRET_KEY = 'development key'
@@ -21,15 +20,6 @@ app.config['UPLOAD_FOLDER'] = BASE_DIR = os.path.dirname(os.path.abspath(__file_
 app.config['ALLOWED_EXTENSIONS'] = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
-
-
-def connect_db():
-    return sqlite3.connect(app.config['DATABASE'])
-
-
 @app.before_request
 def before_request():
     g.db = connect_db()
@@ -40,14 +30,11 @@ def teardown_request(exception):
     if hasattr(g, 'db'):
         g.db.close()
 
-# @app.route('/')
-# def index():
-#     return render_template('index.html')
 
 @app.route('/')
 def app_login():
-    # return main()
-    return render_template('login.html')
+    return render_template('login.html',
+                           login_failed='No')
 
 
 @app.route('/trylogin', methods=['POST'])
@@ -89,6 +76,15 @@ def upload():
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+
+
+def connect_db():
+    return sqlite3.connect(app.config['DATABASE'])
 
 
 if __name__ == '__main__':
