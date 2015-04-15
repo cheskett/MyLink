@@ -1,0 +1,37 @@
+<HTML>
+<HEAD>
+    <link type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <TITLE>Info Form</TITLE>
+</HEAD>
+
+<body>
+
+<H2 style="text-align: center">PictureShare User Administration</H2>
+
+
+<div class="container">
+    <H3>Type User and Password:</H3>
+
+    <FORM METHOD=post ACTION="/trylogin">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <INPUT TYPE=text NAME="username">
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <INPUT TYPE=password NAME="password">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+    </FORM>
+    {% if login_failed=='Yes' %}
+        <h4 style="color: red">Incorrect Username or Password. Try again</h4>
+    {% endif %}
+    {% if bad_session==True %}
+        <h4 style="color: red">Bad session. Log in again</h4>
+    {% endif %}
+</div>
+
+
+</body>
+</HTML>
