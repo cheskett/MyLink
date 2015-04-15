@@ -1,7 +1,8 @@
 import cgi, string, sys, os, re, random
 import cgitb
 import traceback
-from flask import Flask, render_template, g, session
+import mysession
+from flask import Flask, render_template, g, session, redirect, url_for
 
 cgitb.enable()  # for troubleshooting
 import sqlite3
@@ -62,59 +63,18 @@ def check_password(user, passwd, db):
             stored_password = row[1]
         if stored_password == passwd:
             return "passed"
-    except sqlite3.OperationalError as e:
+    except sqlite3.OperationalError:
         traceback.print_exc()
 
     return "failed"
 
 
-def display_admin_options(user, session):
-    html = """
-        <H1> Picture Share Admin Options</H1>
-        <ul>
-        <li> <a href="/new_album">Create new album</a>
-        <li> <a href="/upload">Upload Picture</a>
-        <li> <a href="/show_image">Show Image</a>
-        <li> Delete album
-        <li> Make album public
-        <li> Change pasword
-        </ul>
-        """
-    #Also set a session number in a hidden field so the
-    #cgi can check that the user has been authenticated
-
-    print_html_content_type()
-    print(html.format(user=user, session=session))
-    return html.format(user=user, session=session)
-
-
-#################################################################
-
-
 def create_new_session(user):
-    return session.create_session(user)
-
-
-##############################################################
-
-
-def new_album(form):
-    #Check session
-    if session.check_session(form) != "passed":
-        return
-
-    html = """
-        <H1> New Album</H1>
-        """
-    print_html_content_type()
-    print(html)
-
-
-##############################################################
+    return mysession.create_session(user)
 
 
 def show_image(form):
-    if session.check_session(form) != "passed":
+    if mysession.check_session(form) != "passed":
         return login_form()
 
     # Your code should get the user album and picture and verify that the image belongs to this
@@ -131,60 +91,6 @@ def show_image(form):
     print(hdr + content)
 
 
-###############################################################################
-
-def upload(form):
-    if session.check_session(form) != "passed":
-        return login_form()
-
-    html = """
-        <HTML>
-
-        <FORM ACTION="login.cgi" METHOD="POST" enctype="multipart/form-data">
-            <input type="hidden" name="user" value="{user}">
-            <input type="hidden" name="session" value="{session}">
-            <input type="hidden" name="action" value="upload-pic-data">
-            <BR><I>Browse Picture:</I> <INPUT TYPE="FILE" NAME="file">
-            <br>
-            <input type="submit" value="Press"> to upload the picture!
-            </form>
-        </HTML>
-    """
-
-    user = form["user"].value
-    s = form["session"].value
-    print(html.format(user=user, session=s))
-    return html.format(user=user, session=s)
-
-
-
-#######################################################
-
-def upload_pic_data(form):
-    #Check session is correct
-    if (session.check_session(form) != "passed"):
-        return login_form()
-
-    #Get file info
-    fileInfo = form['file']
-
-    #Get user
-    user = form["user"].value
-    s = form["session"].value
-
-    # Check if the file was uploaded
-    if fileInfo.filename:
-        # Remove directory path to extract name only
-        fileName = os.path.basename(fileInfo.filename)
-        open(IMAGEPATH + '/user1/test.jpg', 'wb').write(fileInfo.file.read())
-        image_url = "login.cgi?action=show_image&user={user}&session={session}".format(user=user, session=s)
-        print_html_content_type()
-        print('<H2>The picture ' + fileName + ' was uploaded successfully</H2>')
-        print('<image src="' + image_url + '">')
-    else:
-        message = 'No file was uploaded'
-
-
 def print_html_content_type():
     # Required header that tells the browser how to render the HTML.
     print("Content-Type: text/html\n\n")
@@ -194,43 +100,13 @@ def print_html_content_type():
 # Define main function.
 def login_post(username, password, db):
     if check_password(username, password, db) == "passed":
-        #session = create_new_session(username)
-        session["username"] = username;
-        return display_admin_options(username, session)
+        # session = create_new_session(username)
+        session["username"] = username
+        session["string"] = create_new_session(username)
+        print(session["username"])
+        print(session["string"])
+        return render_template("picture_options.html", user=username)
     else:
-        return render_template("Login.html",
+        return render_template("login.html",
                                login_failed='Yes')
 
-
-def main():
-    form = cgi.FieldStorage()
-    if "action" in form:
-        action = form["action"].value
-        #print("action=",action)
-        if action == "login":
-            if "username" in form and "password" in form:
-                #Test password
-                username = form["username"].value
-                password = form["password"].value
-                if check_password(username, password) == "passed":
-                    session = create_new_session(username)
-                    display_admin_options(username, session)
-                else:
-                    return login_form()
-                    print("<H3><font color=\"red\">Incorrect user/password</font></H3>")
-        elif action == "new-album":
-            new_album(form)
-        elif action == "upload":
-            upload(form)
-        elif action == "show_image":
-            show_image(form)
-        elif action == "upload-pic-data":
-            upload_pic_data(form)
-        else:
-            return login_form()
-    else:
-        return login_form()
-
-        ###############################################################
-        # Call main function.
-        #main()

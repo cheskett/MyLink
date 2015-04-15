@@ -6,13 +6,7 @@ import cgitb;
 
 cgitb.enable()  # for troubleshooting
 import sqlite3
-
-# Get Databasedir
-MYLOGIN = "smit1618"
-#DATABASE="/homes/"+MYLOGIN+"/PictureShareDB/picture_share.db"
-PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
-DATABASE = os.path.join(PROJECT_ROOT, 'picture_share.db')
-IMAGEPATH = "images"
+from flask import current_app as app, g, session
 
 
 def create_session(user):
@@ -20,9 +14,9 @@ def create_session(user):
     # Number of characters in session string
     n = 20
     char_set = string.ascii_uppercase + string.digits
-    session = ''.join(random.sample(char_set, n))
+    sess = ''.join(random.sample(char_set, n))
 
-    conn = sqlite3.connect(DATABASE)
+    conn = sqlite3.connect(app.config['DATABASE'])
     c = conn.cursor()
 
     # Try to get old session
@@ -35,37 +29,37 @@ def create_session(user):
         c.execute('INSERT INTO sessions  VALUES (?,?)', s)
     else:
         # Update current session
-        s = (session, user)
+        s = (sess, user)
         c.execute('UPDATE sessions  SET session =? WHERE user =?', s)
 
     conn.commit()
     conn.close()
 
-    return session
+    return sess
 
 
-def check_session(form):
-    if "user " in form and "session " in form:
-        username = form["user "].value
-        session = form["session "].value
+def check_session():
+    if 'username' in session and 'string' in session:
+        username = session['username']
+        sess = session['string']
         session_stored = read_session_string(username)
-        if session_stored == session:
+        if session_stored == sess:
             return "passed"
 
     return "failed"
 
 
 def read_session_string(user):
-    conn = sqlite3.connect(DATABASE)
-    c = conn.cursor()
+    # conn = sqlite3.connect(app.config['DATABASE'])
+    c = g.db.cursor()  # conn.cursor()
 
     # Try to get old session
     t = (user,)
     c.execute('SELECT * FROM sessions  WHERE user =?', t)
     row = c.fetchone()
-    conn.close()
+    # conn.close()
 
-    if row:
+    if not row:
         return 'no session'
 
     return row[1]

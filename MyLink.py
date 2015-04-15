@@ -1,8 +1,10 @@
 from flask import Flask
-from login import main, login_post
-from flask import g, render_template, redirect, url_for, request, session, send_from_directory
+from login import login_post
+from flask import g, render_template, redirect, url_for, flash, request, session, send_from_directory
+from datetime import timedelta
 import sqlite3
-import os, cgi
+import os
+import mysession
 
 # config
 
@@ -10,18 +12,20 @@ PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 DATABASE = os.path.join(PROJECT_ROOT, 'picture_share.db')
 IMAGEPATH = 'images/'
 DEBUG = True
-SECRET_KEY = 'development key'
+SECRET_KEY = 'development keyd'
 USERNAME = 'admin'
 PASSWORD = 'default'
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['UPLOAD_FOLDER'] = BASE_DIR = os.path.dirname(os.path.abspath(__file__)) + '/images'
-app.config['ALLOWED_EXTENSIONS'] = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+app.config['ALLOWED_EXTENSIONS'] = ['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif']
 
 
 @app.before_request
 def before_request():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(minutes=30)
     g.db = connect_db()
 
 
@@ -33,8 +37,7 @@ def teardown_request(exception):
 
 @app.route('/')
 def app_login():
-    return render_template('login.html',
-                           login_failed='No')
+    return render_template('login.html')
 
 
 @app.route('/trylogin', methods=['POST'])
@@ -51,25 +54,29 @@ def new_album():
 
 @app.route('/upload', methods=['POST', 'GET'])
 def upload():
-    if request.method == "GET":
-        return render_template("upload.html")
-    else:
-        file = request.files['file']
-        # Get user
-        user = session['username']
-
-        # Check if the file was uploaded
-        if file and allowed_file(file.filename):
-            # Make the filename safe, remove unsupported chars
-            filename = file.filename.replace(" ", "_")
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return render_template("upload_success.html",
-                                   filename=filename,
-                                   )
-
+    if mysession.check_session() == 'passed':
+        if request.method == "GET":
+            print('IN UPLOAD: ' + session['username'])
+            return render_template("upload.html")
         else:
-            return 'No file was uploaded'
+            file = request.files['file']
+            # Get user
+            user = session['username']
 
+            # Check if the file was uploaded
+            if file and allowed_file(file.filename):
+                # Make the filename safe, remove unsupported chars
+                filename = file.filename.replace(" ", "_")
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                return render_template("upload_success.html",
+                                       filename=filename)
+
+            else:
+                return 'No file was uploaded'
+    else:
+        return render_template('login.html',
+                               bad_session=True,
+                               login_failed='No')
 
 
 @app.route('/images/<filename>')
@@ -89,6 +96,4 @@ def connect_db():
 
 if __name__ == '__main__':
     app.debug = "True"
-    host = "0.0.0.0",
-    port = int("80"),
     app.run()
