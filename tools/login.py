@@ -15,10 +15,10 @@ DATABASE = 'picture_share.db'
 IMAGEPATH = 'images'
 
 
-def register_user(user, passwd):
+def register_user(user, passwd, pass2):
     c = g.db.cursor()
     is_valid = validate_email(user, verify=True)
-    if is_valid:
+    if is_valid & passwd == pass2:
         tup = (user, passwd, 'N')
         c.execute('INSERT INTO users (?,?,?)', tup)
         if c.rowcount == 1:
