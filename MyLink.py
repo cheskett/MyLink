@@ -25,7 +25,7 @@ app.config['ALLOWED_EXTENSIONS'] = ['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif']
 @app.before_request
 def before_request():
     session.permanent = True
-    app.permanent_session_lifetime = timedelta(minutes=5)
+    app.permanent_session_lifetime = timedelta(minutes=30)
     g.db = connect_db()
 
 
@@ -75,8 +75,7 @@ def upload():
                 return 'No file was uploaded'
     else:
         return render_template('login.html',
-                               bad_session=True,
-                               login_failed='No')
+                               bad_session=True)
 
 
 @app.route('/images/<filename>')
