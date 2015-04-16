@@ -1,11 +1,10 @@
-import cgi, string, sys, os, re, random
-import cgitb
 import traceback
-import mysession
-from flask import Flask, render_template, g, session, redirect, url_for
+from validate_email import validate_email
+from flask import Flask, render_template, session, g
 
-cgitb.enable()  # for troubleshooting
+from tools import mysession
 import sqlite3
+
 
 __author__ = 'Cameron'
 app = Flask(__name__)
@@ -16,36 +15,18 @@ DATABASE = 'picture_share.db'
 IMAGEPATH = 'images'
 
 
-def login_form():
-    html = """
-
-<HTML>
-<HEAD>
-<TITLE>Info Form</TITLE>
-</HEAD>
-
-<BODY BGCOLOR = white>
-
-<center><H2>PictureShare User Administration</H2></center>
-
-<H3>Type User and Password:</H3>
-
-<TABLE BORDER = 0>
-<FORM METHOD=post ACTION="/trylogin">
-<TR><TH>Username:</TH><TD><INPUT TYPE=text NAME="username"></TD><TR>
-<TR><TH>Password:</TH><TD><INPUT TYPE=password NAME="password"></TD></TR>
-</TABLE>
-
-<INPUT TYPE=hidden NAME="action" VALUE="login">
-<INPUT TYPE=submit VALUE="Enter">
-</FORM>
-</BODY>
-</HTML>
-"""
-    print_html_content_type()
-    print(html)
-    return html
-    #return render_template("login.html")
+def register_user(user, passwd):
+    c = g.db.cursor()
+    is_valid = validate_email(user, verify=True)
+    if is_valid:
+        tup = (user, passwd, 'N')
+        c.execute('INSERT INTO users (?,?,?)', tup)
+        if c.rowcount == 1:
+            return render_template("email_sent.html", user=user)
+        else:
+            return render_template('register.html', error='Username already exists')
+    else:
+        return render_template('register.html', error="Not a valid email address")
 
 
 def check_password(user, passwd, db):
@@ -80,7 +61,7 @@ def show_image(form):
     # Your code should get the user album and picture and verify that the image belongs to this
     # user and this album before loading it
 
-    #username=form["username"].value
+    # username=form["username"].value
 
     # Read image
     with open(IMAGEPATH + '/user1/test.jpg', 'rb') as content_file:
@@ -89,11 +70,6 @@ def show_image(form):
     # Send header and image content
     hdr = "Content-Type: image/jpeg\nContent-Length: %d\n\n" % len(content)
     print(hdr + content)
-
-
-def print_html_content_type():
-    # Required header that tells the browser how to render the HTML.
-    print("Content-Type: text/html\n\n")
 
 
 ##############################################################
