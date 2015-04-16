@@ -9,9 +9,6 @@ from tools.login import login_post, register_user
 from tools import mysession
 
 
-
-# config
-
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 DATABASE = os.path.join(PROJECT_ROOT, 'picture_share.db')
 IMAGEPATH = 'images/'
