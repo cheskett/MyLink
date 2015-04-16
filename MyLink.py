@@ -45,7 +45,7 @@ def app_login():
 def register():
     return render_template('register.html')
 
-@app.route('/register_user')
+@app.route('/register_user', methods=['POST'])
 def register_u():
     name = request.form['username']
     password1 = request.form['password1']

@@ -17,8 +17,8 @@ IMAGEPATH = 'images'
 
 def register_user(user, passwd, pass2):
     c = g.db.cursor()
-    is_valid = validate_email(user, verify=True)
-    if is_valid & passwd == pass2:
+    is_valid = validate_email(user)
+    if is_valid & (passwd == pass2):
         tup = (user, passwd, 'N')
         c.execute('INSERT INTO users (?,?,?)', tup)
         if c.rowcount == 1:
