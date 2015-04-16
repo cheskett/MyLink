@@ -26,6 +26,9 @@
             </div>
             <button type="submit" class="btn btn-default">Submit</button>
         </FORM>
+        {% if error %}
+            <h4 style="color: red">{{ error }}</h4>
+        {% endif %}
      </div>
 </body>
 </html>
