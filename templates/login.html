@@ -23,8 +23,8 @@
             <INPUT TYPE=password NAME="password">
         </div>
         <button type="submit" class="btn btn-default">Submit</button>
+        <button formmethod="get" formaction="/register" type="submit" class="btn btn-default">Sign Up</button>
     </FORM>
-    <button action="/register" type="submit" class="btn btn-default">Sign Up</button>
     {% if login_failed=='Yes' %}
         <h4 style="color: red">Incorrect Username or Password. Try again</h4>
     {% endif %}

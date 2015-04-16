@@ -42,7 +42,7 @@ def app_login():
 
 @app.route('/register')
 def register():
-
+    return render_template("register.html")
 
 
 @app.route('/trylogin', methods=['POST'])
