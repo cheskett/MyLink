@@ -45,7 +45,6 @@ def register():
     return render_template('register.html')
 
 
-
 @app.route('/trylogin', methods=['POST'])
 def try_login():
     name = request.form['username']

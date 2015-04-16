@@ -2,10 +2,30 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
+    <link type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     <title>MyLink-Register</title>
 </head>
 
 <body>
+    <H2 style="text-align: center">MyLink-Register</H2>
 
+    <div class="container">
+        <H3>Type Register information:</H3>
+        <FORM METHOD=post ACTION="/register_user">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <INPUT TYPE=text NAME="username">
+            </div>
+            <div class="form-group">
+                <label for="password1">Password:</label>
+                <INPUT TYPE=password NAME="password1">
+            </div>
+            <div class="form-group">
+                <label for="password2">Retype Password:</label>
+                <INPUT TYPE=password NAME="password2">
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+        </FORM>
+     </div>
 </body>
 </html>
