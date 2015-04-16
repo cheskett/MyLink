@@ -40,8 +40,13 @@ def app_login():
     return render_template('login.html')
 
 
+@app.route('/register')
+def register():
+
+
+
 @app.route('/trylogin', methods=['POST'])
-def hello():
+def try_login():
     name = request.form['username']
     password = request.form['password']
     return login_post(name, password, g.db)
