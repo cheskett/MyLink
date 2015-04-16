@@ -1,10 +1,14 @@
-from flask import Flask
-from login import login_post
-from flask import g, render_template, redirect, url_for, flash, request, session, send_from_directory
 from datetime import timedelta
 import sqlite3
 import os
-import mysession
+
+from flask import Flask
+from flask import g, render_template, request, session, send_from_directory
+
+from tools.login import login_post, register_user
+from tools import mysession
+
+
 
 # config
 
