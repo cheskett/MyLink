@@ -5,7 +5,7 @@ import os
 from flask import Flask
 from flask import g, render_template, request, session, send_from_directory
 
-from tools.login import login_post, register_user
+from tools.login import login_post, register_user, check_password, change_password_db
 from tools import mysession
 
 
@@ -40,13 +40,20 @@ def teardown_request(exception):
 def app_login():
     return render_template('login.html')
 
+@app.route('/return')
+def app_return():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        return render_template("picture_options.html", user=username)
+    else:
+        return render_template('login.html',bad_session=True)
 
 @app.route('/register')
 def register():
     return render_template('register.html')
 
 @app.route('/register_user', methods=['POST'])
-def register_u():
+def register_user():
     name = request.form['username']
     password1 = request.form['password1']
     password2 = request.form['password2']
@@ -89,6 +96,35 @@ def upload():
     else:
         return render_template('login.html',
                                bad_session=True)
+
+
+@app.route('/change_password_page', methods=['POST', 'GET'])
+def change_password_page():
+    if mysession.check_session() == 'passed':
+        return render_template('change_password_page.html');
+    else:
+        return render_template('login.html',bad_session=False)
+
+
+
+@app.route('/change_password', methods=['POST'])
+def change_password():
+    oldPass = request.form['oldPassword']
+    newPass1 = request.form['newPassword1']
+    newPass2 = request.form['newPassword2']
+    username = session['username']
+    if mysession.check_session() == 'passed':
+        if check_password(username, oldPass, g.db) == "passed":
+            if newPass1 == newPass2:
+                change_password_db(username, newPass1, g.db);
+                return render_template('change_password_success.html')
+            else:
+                return render_template('change_password_page.html',bad_match=True)
+        else:
+            return render_template('change_password_page.html',bad_password=True)
+    else:
+        return render_template('login.html',bad_session=False)
+
 
 
 @app.route('/images/<filename>')
