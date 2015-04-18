@@ -50,7 +50,8 @@ def logout():
         mysession.logout(username);
         return render_template('login.html')
     else:
-        return render_template('login.html',bad_session=True)
+        return render_template('login.html', bad_session=True)
+
 
 @app.route('/return')
 def app_return():
@@ -146,7 +147,7 @@ def change_password():
     if mysession.check_session() == 'passed':
         if check_password(username, oldPass, g.db) == "passed":
             if newPass1 == newPass2:
-                change_password_db(username, newPass1, g.db);
+                change_password_db(username, newPass1, g.db)
                 return render_template('change_password_success.html')
             else:
                 return render_template('change_password_page.html', bad_match=True)
@@ -155,12 +156,14 @@ def change_password():
     else:
         return render_template('login.html', bad_session=False)
 
+
 @app.route('/Change_User_Info_Page', methods=['POST', 'GET'])
 def change_info_page():
     if mysession.check_session() == 'passed':
         return render_template('change_user_info_page.html');
     else:
         return render_template('login.html', bad_session=False)
+
 
 @app.route('/Change_User_Info', methods=['POST'])
 def change_info_event():
@@ -174,7 +177,8 @@ def change_info_event():
         desc = request.form['desc']
         home = request.form['home']
         phone = request.form['phone']
-        print('Changes for ' + username + ':' + ' A:'+age + ' D:' +date + ' R:'+relationship + ' O:'+occupation +' E:' +education + ' Desc:'+ desc + ' H:'+home + ' P:'+ phone)
+        print(
+            'Changes for ' + username + ':' + ' A:' + age + ' D:' + date + ' R:' + relationship + ' O:' + occupation + ' E:' + education + ' Desc:' + desc + ' H:' + home + ' P:' + phone)
 
         if age:
             print('change age: ' + age)
