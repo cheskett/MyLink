@@ -31,18 +31,19 @@ def entry_exists(user, friend):
     data = (user, friend)
     query = "SELECT * FROM friends WHERE user1 = ? and user2 = ?"
     c.execute(query, data)
-    row = c.fetchone
+    row = c.fetchone()
     if not row:
         data = (friend, user)
         query = "SELECT * FROM friends WHERE user1 = ? and user2 = ?"
         c.execute(query, data)
-        row = c.fetchone
+        row = c.fetchone()
         if row:
             return 'accept'
         else:
             return 'none'
     else:
-        if row[2] == 1:
+        status = row[2]
+        if status == 1:
             return 'friends'
         else:
             return 'ask'

@@ -191,9 +191,9 @@ def friend_request_sent():
         requested = request.form["request"]
         if user_exists(requested):
             if request_friend(requested):
-                render_template('friend_request_sent.html', now_friend=True)
+                return render_template('friend_request_sent.html', now_friend=True)
             else:
-                render_template('friend_request_sent.html', now_friend=False)
+                return render_template('friend_request_sent.html', now_friend=False)
         else:
             return render_template('friend_request_page.html', bad_user=True)
     else:
