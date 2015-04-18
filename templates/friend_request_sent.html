@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <link type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <title>MyLink-Friend-Request-Sent-Page</title>
+</head>
+<body>
+    <H2 style="text-align: center">MyLink-Friend Request Sent Page</H2>
+    <div class="container">
+        <H3>Friend Request Results:</H3>
+        {% if now_friend==True %}
+            <H3>You are now friends</H3>
+        {% else %}
+            <H3>Request has been sent</H3>
+        {% endif %}
+        <FORM METHOD=get ACTION="/return">
+            <button type="submit" class="btn btn-default">Return</button>
+        </FORM>
+    </div>>
+</body>
+</html>

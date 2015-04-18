@@ -209,6 +209,27 @@ def change_info_event():
     else:
         return render_template('login.html', bad_session=False)
 
+@app.route('/Friend_Request_Page')
+def app_return():
+    if mysession.check_session() == 'passed':
+        return render_template("friend_request_page.html")
+    else:
+        return render_template('login.html', bad_session=True)
+
+
+@app.route('/Friend_Request_Sent')
+def app_return():
+    if mysession.check_session() == 'passed':
+        if check_for_user() == True:
+            if friend_request_accept() == True:
+                render_template('friend_request_sent.html', now_friend=True)
+            else:
+                render_template('friend_request_sent.html', now_friend=False)
+        else:
+            return render_template('friend_request_page.html', bad_user=True)
+    else:
+        return render_template('login.html', bad_session=True)
+
 
 @app.route('/images/<filename>')
 def uploaded_file(filename):
