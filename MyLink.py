@@ -193,7 +193,7 @@ def change_info_event():
             change_col_db(username, "education", education, g.db)
         if desc:
             print('change desc: ' + desc)
-            change_col_db(username, "desc'", desc, g.db)
+            change_col_db(username, "desc", desc, g.db)
         if home:
             print('change home: ' + home)
             change_col_db(username, "home", home, g.db)
