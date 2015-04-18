@@ -137,3 +137,18 @@ def change_password_db(user, passwd, db):
     except sqlite3.OperationalError:
         traceback.print_exc()
 
+
+def change_col_db(user, col, input, db):
+    try:
+        conn = db
+        c = conn.cursor()
+
+
+        t = (input,user)
+        c.execute('UPDATE users SET {}=? WHERE email=?'.format(col), t)
+        conn.commit()
+
+        #conn.close()
+    except sqlite3.OperationalError:
+        traceback.print_exc()
+
