@@ -42,6 +42,7 @@ def teardown_request(exception):
 def app_login():
     return render_template('login.html')
 
+
 @app.route('/Log_Out')
 def logout():
     if mysession.check_session() == 'passed':
