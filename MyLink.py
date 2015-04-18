@@ -2,11 +2,12 @@ from datetime import timedelta
 import sqlite3
 import os
 
-from flask import Flask
-from flask import g, render_template, request, session, send_from_directory
+from flask import Flask, abort, flash
+from flask import g, render_template, request, session, send_from_directory, redirect, url_for
 
-from tools.login import login_post, register_user
+from tools.login import login_post, register_user, get_serializer, user_exists, set_user_active
 from tools import mysession
+from itsdangerous import BadSignature
 
 
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
@@ -45,12 +46,13 @@ def app_login():
 def register():
     return render_template('register.html')
 
+
 @app.route('/register_user', methods=['POST'])
 def register_u():
     name = request.form['username']
     password1 = request.form['password1']
     password2 = request.form['password2']
-    return register_user(name,password1, password2)
+    return register_user(name, password1, password2)
 
 
 @app.route('/trylogin', methods=['POST'])
@@ -89,6 +91,23 @@ def upload():
     else:
         return render_template('login.html',
                                bad_session=True)
+
+
+@app.route('/users/activate/<payload>')
+def activate_user(payload):
+    s = get_serializer()
+    try:
+        user_id = s.loads(payload)
+    except BadSignature:
+        abort(404)
+
+    if user_exists(user_id) is True:
+        set_user_active(user_id)
+        flash("User activated successfully")
+        return redirect(url_for('app_login'))
+    else:
+        flash("User activation failed")
+        return redirect(url_for('app_login'))
 
 
 @app.route('/images/<filename>')
