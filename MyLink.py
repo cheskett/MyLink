@@ -4,11 +4,13 @@ import os
 
 from flask import Flask, abort, flash
 from flask import g, render_template, request, session, send_from_directory, redirect, url_for
+from itsdangerous import BadSignature
 
-from tools.login import get_serializer, user_exists, set_user_active, change_col_db
+from tools.user_data import change_user_info
+from tools.friends import request_friend
+from tools.login import get_serializer, user_exists, set_user_active
 from tools.login import login_post, register_user, check_password, change_password_db
 from tools import mysession
-from itsdangerous import BadSignature
 
 
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
@@ -169,42 +171,8 @@ def change_info_page():
 def change_info_event():
     if mysession.check_session() == 'passed':
         username = session['username']
-        age = request.form['age']
-        date = request.form['date']
-        relationship = request.form['relationship']
-        occupation = request.form['occupation']
-        education = request.form['education']
-        desc = request.form['desc']
-        home = request.form['home']
-        phone = request.form['phone']
-        print(
-            'Changes for ' + username + ':' + ' A:' + age + ' D:' + date + ' R:' + relationship + ' O:' + occupation + ' E:' + education + ' Desc:' + desc + ' H:' + home + ' P:' + phone)
-
-        if age:
-            print('change age: ' + age)
-            change_col_db(username, "age", age, g.db)
-        if date:
-            print('change date: ' + date)
-            change_col_db(username, "date", date, g.db)
-        if relationship:
-            print('change relationship: ' + relationship)
-            change_col_db(username, "relationship", relationship, g.db)
-        if occupation:
-            print('change occupation: ' + occupation)
-            change_col_db(username, "occupation", occupation, g.db)
-        if education:
-            print('change education: ' + education)
-            change_col_db(username, "education", education, g.db)
-        if desc:
-            print('change desc: ' + desc)
-            change_col_db(username, "desc", desc, g.db)
-        if home:
-            print('change home: ' + home)
-            change_col_db(username, "home", home, g.db)
-        if phone:
-            print('change phone: ' + phone)
-            change_col_db(username, "phone", phone, g.db)
-
+        form = request.form
+        change_user_info(username,form)
         return render_template('change_user_success.html')
     else:
         return render_template('login.html', bad_session=False)
@@ -220,8 +188,9 @@ def app_return():
 @app.route('/Friend_Request_Sent')
 def app_return():
     if mysession.check_session() == 'passed':
-        if check_for_user() == True:
-            if friend_request_accept() == True:
+        request = session['request']
+        if user_exists(request) == True:
+            if request_friend() == True:
                 render_template('friend_request_sent.html', now_friend=True)
             else:
                 render_template('friend_request_sent.html', now_friend=False)
