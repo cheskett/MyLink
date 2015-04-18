@@ -6,6 +6,7 @@ from flask import Flask, abort, flash
 from flask import g, render_template, request, session, send_from_directory, redirect, url_for
 
 from tools.login import login_post, register_user, get_serializer, user_exists, set_user_active
+from tools.login import login_post, register_user, check_password, change_password_db
 from tools import mysession
 from itsdangerous import BadSignature
 
@@ -41,6 +42,13 @@ def teardown_request(exception):
 def app_login():
     return render_template('login.html')
 
+@app.route('/return')
+def app_return():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        return render_template("picture_options.html", user=username)
+    else:
+        return render_template('login.html',bad_session=True)
 
 @app.route('/register')
 def register():
@@ -108,6 +116,35 @@ def activate_user(payload):
     else:
         flash("User activation failed")
         return redirect(url_for('app_login'))
+
+
+@app.route('/change_password_page', methods=['POST', 'GET'])
+def change_password_page():
+    if mysession.check_session() == 'passed':
+        return render_template('change_password_page.html');
+    else:
+        return render_template('login.html',bad_session=False)
+
+
+
+@app.route('/change_password', methods=['POST'])
+def change_password():
+    oldPass = request.form['oldPassword']
+    newPass1 = request.form['newPassword1']
+    newPass2 = request.form['newPassword2']
+    username = session['username']
+    if mysession.check_session() == 'passed':
+        if check_password(username, oldPass, g.db) == "passed":
+            if newPass1 == newPass2:
+                change_password_db(username, newPass1, g.db);
+                return render_template('change_password_success.html')
+            else:
+                return render_template('change_password_page.html',bad_match=True)
+        else:
+            return render_template('change_password_page.html',bad_password=True)
+    else:
+        return render_template('login.html',bad_session=False)
+
 
 
 @app.route('/images/<filename>')

@@ -75,7 +75,7 @@ def check_password(user, passwd, db):
         c.execute('SELECT * FROM users  WHERE email=?', t)
 
         row = stored_password = c.fetchone()
-        conn.close()
+        #conn.close()
 
         if row:
             stored_password = row[1]
@@ -122,4 +122,18 @@ def login_post(username, password, db):
     else:
         return render_template("login.html",
                                login_failed='Yes')
+
+
+def change_password_db(user, passwd, db):
+    try:
+        conn = db
+        c = conn.cursor()
+
+        t = (passwd,user,)
+        c.execute('UPDATE users SET password=? WHERE email=?', t)
+        conn.commit()
+
+        #conn.close()
+    except sqlite3.OperationalError:
+        traceback.print_exc()
 
