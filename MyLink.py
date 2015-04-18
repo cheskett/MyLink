@@ -178,7 +178,7 @@ def change_info_event():
         return render_template('login.html', bad_session=False)
 
 @app.route('/Friend_Request_Page')
-def app_return():
+def friend_request_page():
     if mysession.check_session() == 'passed':
         return render_template("friend_request_page.html")
     else:
@@ -186,7 +186,7 @@ def app_return():
 
 
 @app.route('/Friend_Request_Sent')
-def app_return():
+def friend_request_sent():
     if mysession.check_session() == 'passed':
         request = session['request']
         if user_exists(request) == True:
