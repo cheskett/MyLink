@@ -64,3 +64,13 @@ def read_session_string(user):
 
     return row[1]
 
+def logout(user):
+    # conn = sqlite3.connect(app.config['DATABASE'])
+    c = g.db.cursor()  # conn.cursor()
+
+    # Try to get old session
+    t = (user,)
+    #c.execute('SELECT * FROM sessions  WHERE user =?', t)
+    c.execute('DELETE FROM sessions WHERE user =?', t)
+
+
