@@ -1,13 +1,13 @@
 import traceback
 from validate_email import validate_email
-from flask import Flask, render_template, session, g
-
+from flask import Flask, render_template, session, g, current_app as app, url_for
+from itsdangerous import URLSafeSerializer
 from tools import mysession
+from tools import email
 import sqlite3
 
 
 __author__ = 'Cameron'
-app = Flask(__name__)
 
 # Get Databasedir
 MYLOGIN = "smit1618"
@@ -20,13 +20,50 @@ def register_user(user, passwd, pass2):
     is_valid = validate_email(user)
     if is_valid & (passwd == pass2):
         tup = (user, passwd, 'N')
-        c.execute('INSERT INTO users (?,?,?,)', tup)
+        c.execute('INSERT INTO users (email, password, active) \
+                                 VALUES (?,?,?)', tup)
         if c.rowcount == 1:
+            g.db.commit()
+            payload = get_payload_url(user)
+            email.send_register_email(user, payload)
             return render_template("email_sent.html", user=user)
         else:
             return render_template('register.html', error='Username already exists')
     else:
         return render_template('register.html', error="Not a valid email address")
+
+
+def get_serializer(secret_key=None):
+    if secret_key is None:
+        secret_key = app.config["SECRET_KEY"]
+    return URLSafeSerializer(secret_key)
+
+
+def get_payload_url(user):
+    serializer = get_serializer()
+    payload = serializer.dumps(user)
+    return url_for('activate_user', payload=payload, _external=True)
+
+
+def send_registration_email(user):
+    return
+
+
+def user_exists(user):
+    c = g.db.cursor()
+    t = (user,)
+    c.execute('SELECT * FROM users  WHERE email=?', t)
+    row = c.fetchone()
+    if row:
+        return True
+    return False
+
+
+def set_user_active(user):
+    c = g.db.cursor()
+    t = ("Y", user)
+    c.execute('UPDATE users SET active = ? WHERE email=?', t)
+    g.db.commit()
 
 
 def check_password(user, passwd, db):

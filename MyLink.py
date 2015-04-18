@@ -2,11 +2,13 @@ from datetime import timedelta
 import sqlite3
 import os
 
-from flask import Flask
-from flask import g, render_template, request, session, send_from_directory
+from flask import Flask, abort, flash
+from flask import g, render_template, request, session, send_from_directory, redirect, url_for
 
+from tools.login import get_serializer, user_exists, set_user_active
 from tools.login import login_post, register_user, check_password, change_password_db
 from tools import mysession
+from itsdangerous import BadSignature
 
 
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
@@ -55,18 +57,20 @@ def app_return():
         username = session['username']
         return render_template("picture_options.html", user=username)
     else:
-        return render_template('login.html',bad_session=True)
+        return render_template('login.html', bad_session=True)
+
 
 @app.route('/register')
 def register():
     return render_template('register.html')
 
+
 @app.route('/register_user', methods=['POST'])
-def register_user():
+def register_u():
     name = request.form['username']
     password1 = request.form['password1']
     password2 = request.form['password2']
-    return register_user(name,password1, password2)
+    return register_user(name, password1, password2)
 
 
 @app.route('/trylogin', methods=['POST'])
@@ -107,13 +111,29 @@ def upload():
                                bad_session=True)
 
 
+@app.route('/users/activate/<payload>')
+def activate_user(payload):
+    s = get_serializer()
+    try:
+        user_id = s.loads(payload)
+    except BadSignature:
+        abort(404)
+
+    if user_exists(user_id) is True:
+        set_user_active(user_id)
+        flash("User activated successfully")
+        return redirect(url_for('app_login'))
+    else:
+        flash("User activation failed")
+        return redirect(url_for('app_login'))
+
+
 @app.route('/change_password_page', methods=['POST', 'GET'])
 def change_password_page():
     if mysession.check_session() == 'passed':
         return render_template('change_password_page.html');
     else:
-        return render_template('login.html',bad_session=False)
-
+        return render_template('login.html', bad_session=False)
 
 
 @app.route('/change_password', methods=['POST'])
@@ -128,12 +148,11 @@ def change_password():
                 change_password_db(username, newPass1, g.db);
                 return render_template('change_password_success.html')
             else:
-                return render_template('change_password_page.html',bad_match=True)
+                return render_template('change_password_page.html', bad_match=True)
         else:
-            return render_template('change_password_page.html',bad_password=True)
+            return render_template('change_password_page.html', bad_password=True)
     else:
-        return render_template('login.html',bad_session=False)
-
+        return render_template('login.html', bad_session=False)
 
 
 @app.route('/images/<filename>')
