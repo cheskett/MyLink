@@ -91,22 +91,22 @@ def create_new_session(user):
     return mysession.create_session(user)
 
 
-def show_image(form):
-    if mysession.check_session(form) != "passed":
-        return login_form()
-
-    # Your code should get the user album and picture and verify that the image belongs to this
-    # user and this album before loading it
-
-    # username=form["username"].value
-
-    # Read image
-    with open(IMAGEPATH + '/user1/test.jpg', 'rb') as content_file:
-        content = content_file.read()
-
-    # Send header and image content
-    hdr = "Content-Type: image/jpeg\nContent-Length: %d\n\n" % len(content)
-    print(hdr + content)
+# def show_image(form):
+#     if mysession.check_session(form) != "passed":
+#         return login_form()
+#
+#     # Your code should get the user album and picture and verify that the image belongs to this
+#     # user and this album before loading it
+#
+#     # username=form["username"].value
+#
+#     # Read image
+#     with open(IMAGEPATH + '/user1/test.jpg', 'rb') as content_file:
+#         content = content_file.read()
+#
+#     # Send header and image content
+#     hdr = "Content-Type: image/jpeg\nContent-Length: %d\n\n" % len(content)
+#     print(hdr + content)
 
 
 ##############################################################
