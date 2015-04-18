@@ -14,7 +14,7 @@ def create_session(user):
     # Number of characters in session string
     n = 20
     char_set = string.ascii_uppercase + string.digits
-    sess = ''.join(random.sample(char_set, n))
+    sess = str(''.join(random.sample(char_set, n)))
 
     conn = sqlite3.connect(app.config['DATABASE'])
     c = conn.cursor()
@@ -25,8 +25,8 @@ def create_session(user):
     row = c.fetchone()
     if not row:
         # No session for this user. Create one
-        s = (user, session)
-        c.execute('INSERT INTO sessions  VALUES (?,?)', s)
+        s = (user, sess)
+        c.execute('INSERT INTO sessions VALUES (?,?)', s)
     else:
         # Update current session
         s = (sess, user)
