@@ -185,12 +185,12 @@ def friend_request_page():
         return render_template('login.html', bad_session=True)
 
 
-@app.route('/Friend_Request_Sent')
+@app.route('/Friend_Request_Sent', methods=['POST'])
 def friend_request_sent():
     if mysession.check_session() == 'passed':
-        request = session['request']
-        if user_exists(request) == True:
-            if request_friend() == True:
+        requested = request.form["request"]
+        if user_exists(requested):
+            if request_friend(requested):
                 render_template('friend_request_sent.html', now_friend=True)
             else:
                 render_template('friend_request_sent.html', now_friend=False)
