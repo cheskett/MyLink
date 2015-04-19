@@ -83,7 +83,6 @@ def check_password(user, passwd, db):
             return "passed"
     except sqlite3.OperationalError:
         traceback.print_exc()
-
     return "failed"
 
 
