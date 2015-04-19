@@ -6,7 +6,7 @@ from flask import Flask, abort, flash
 from flask import g, render_template, request, session, send_from_directory, redirect, url_for
 from itsdangerous import BadSignature
 
-from tools.user_data import change_user_info
+from tools.user_data import change_user_info, friends_data
 from tools.friends import request_friend
 from tools.login import get_serializer, user_exists, set_user_active
 from tools.login import login_post, register_user, check_password, change_password_db
@@ -199,6 +199,14 @@ def friend_request_sent():
     else:
         return render_template('login.html', bad_session=True)
 
+
+@app.route('/Friends_Page')
+def friends_page():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        return friends_data(username, g.db)
+    else:
+        return render_template('login.html', bad_session=True)
 
 @app.route('/images/<filename>')
 def uploaded_file(filename):

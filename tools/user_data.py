@@ -1,9 +1,11 @@
 from tools.login import change_col_db
+from flask import Flask, render_template, session, g, current_app as app, url_for
 
 __author__ = 'Shade390'
 
 
 def change_user_info(username, form, db):
+
     age = form['age']
     date = form['date']
     relationship = form['relationship']
@@ -37,3 +39,11 @@ def change_user_info(username, form, db):
     if phone:
         print('change phone: ' + phone)
         change_col_db(username, "phone", phone, db)
+
+
+def friends_data(username, db):
+    friends     = ''
+    requested   = ''
+    requests    = ''
+    
+    return render_template('friends_page.html', friends=friends, requests=requests, requested=requested)
