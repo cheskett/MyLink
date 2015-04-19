@@ -3,7 +3,7 @@ from tools.login import change_col_db
 __author__ = 'Shade390'
 
 
-def change_user_info(username, form):
+def change_user_info(username, form, db):
     age = form['age']
     date = form['date']
     relationship = form['relationship']
@@ -15,25 +15,25 @@ def change_user_info(username, form):
 
     if age:
         print('change age: ' + age)
-        change_col_db(username, "age", age, g.db)
+        change_col_db(username, "age", age, db)
     if date:
         print('change date: ' + date)
-        change_col_db(username, "date", date, g.db)
+        change_col_db(username, "date", date, db)
     if relationship:
         print('change relationship: ' + relationship)
-        change_col_db(username, "relationship", relationship, g.db)
+        change_col_db(username, "relationship", relationship, db)
     if occupation:
         print('change occupation: ' + occupation)
-        change_col_db(username, "occupation", occupation, g.db)
+        change_col_db(username, "occupation", occupation, db)
     if education:
         print('change education: ' + education)
-        change_col_db(username, "education", education, g.db)
+        change_col_db(username, "education", education, db)
     if desc:
         print('change desc: ' + desc)
-        change_col_db(username, "desc", desc, g.db)
+        change_col_db(username, "desc", desc, db)
     if home:
         print('change home: ' + home)
-        change_col_db(username, "home", home, g.db)
+        change_col_db(username, "home", home, db)
     if phone:
         print('change phone: ' + phone)
-        change_col_db(username, "phone", phone, g.db)
+        change_col_db(username, "phone", phone, db)
