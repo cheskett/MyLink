@@ -217,6 +217,14 @@ def unfriend_event():
     else:
         return render_template('login.html', bad_session=True)
 
+@app.route('/Circles_Page', methods=['GET'])
+def circles_page():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        return circles_page_db(username,g.db)
+    else:
+        return render_template('login.html', bad_session=True)
+
 
 @app.route('/images/<filename>')
 def uploaded_file(filename):

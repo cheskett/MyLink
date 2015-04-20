@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <link type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <title>MyLink-Circle-Page</title>
+</head>
+
+<body>
+
+<H2 style="text-align: center">MyLink-Circles Page</H2>
+
+<div class="container">
+    <H3>Circles:</H3>
+
+    {% for circle in circles %}
+    <FORM METHOD=post ACTION="/Edit_Circle">
+        <input type="hidden" name="circle" value="{{circle}}">
+        <div class="form-group">
+            <label for="{{circle}}">{{circle}}</label>
+            <button name={{circle}} type="submit" class="btn btn-default">Edit Circle: {{circle}}</button>
+            <button name={{circle}}r formaction="/Remove_Circle" type="submit" class="btn btn-default">Remove Circle: {{circle}}</button>
+        </div>
+    </FORM>
+    {% endfor %}
+
+    {% if removed==True %}
+        <h4 style="color: red">Circle Removed.</h4>
+    {% endif %}
+    {% if exists==True %}
+        <h4 style="color: red">Circle Already Exists.</h4>
+    {% endif %}
+
+    <FORM METHOD=post ACTION="/Create_Circle">
+        <label for="name">New Circle Name:</label>
+        <INPUT TYPE=text NAME="name">
+        <button type="submit" class="btn btn-default">Return</button>
+    </FORM>
+
+    <FORM METHOD=get ACTION="/return">
+        <button type="submit" class="btn btn-default">Return</button>
+    </FORM>
+</div>
+
+</body>
+</html>

@@ -41,8 +41,10 @@
     {% for request in requests %}
     <FORM METHOD=post ACTION="/Unfriend">
         <input type="hidden" name="other" value="{{request}}">
+        <input type="hidden" name="request" value="{{request}}">
         <div class="form-group"><label for="{{request}}">{{request}}</label>
-            <button name={{request}} type="submit" class="btn btn-default">Deny Request from {{request}}</button>
+            <button name={{request}} formaction="/Friend_Request_Sent" type="submit" class="btn btn-default">Accept Request from {{request}}</button>
+            <button name={{request}}o type="submit" class="btn btn-default">Deny Request from {{request}}</button>
         </div>
     </FORM>
     {% endfor %}
