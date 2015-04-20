@@ -9,13 +9,45 @@
 
 <div class="container">
     <H3>Friends List:</H3>
-        {{ friends }}
+
+
+    {% for friend in friends %}
+    <FORM METHOD=post ACTION="/Unfriend">
+        <input type="hidden" name="other" value="{{friend}}">
+        <div class="form-group">
+            <label for={{friend}}>{{friend}}</label>
+            <button name={{friend}} type="submit" class="btn btn-default">Unfriend {{friend}}</button>
+        </div>
+    </FORM>
+    {% endfor %}
+
 
     <H3>Your Friends Requests:</H3>
-        {{ requested }}
+
+
+    {% for request in requested %}
+    <FORM METHOD=post ACTION="/Unfriend">
+        <input type="hidden" name="other" value="{{request}}">
+        <div class="form-group"><label for="{{request}}">{{request}}</label>
+            <button name={{request}} type="submit" class="btn btn-default">Unfriend {{request}}</button>
+        </div>
+    </FORM>
+    {% endfor %}
+
 
     <H3>Requests Sent to You:</H3>
-        {{ requests }}
+
+
+    {% for request in requests %}
+    <FORM METHOD=post ACTION="/Deny_Request">
+        <input type="hidden" name="other" value="{{request}}">
+        <div class="form-group"><label for="{{request}}">{{request}}</label>
+            <button name={{request}} type="submit" class="btn btn-default">Deny Request from {{request}}</button>
+        </div>
+    </FORM>
+    {% endfor %}
+
+
     <FORM METHOD=get ACTION="/return">
         <button type="submit" class="btn btn-default">Return</button>
     </FORM>
