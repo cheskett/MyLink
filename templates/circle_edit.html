@@ -8,8 +8,8 @@
 <H2 style="text-align: center">MyLink-Circle Edit Page</H2>
 <div class="container">
     <H3>Friends in the Circle:</H3>
-
-    {% for friend in friends %}
+    <hr>
+    {% for friend in friendsC %}
     <FORM METHOD=post ACTION="/Remove_Friend">
         <input type="hidden" name="friend" value="{{friend}}">
         <div class="form-group">
@@ -18,12 +18,22 @@
         </div>
     </FORM>
     {% endfor %}
-
+    <hr>
     <FORM METHOD=post ACTION="/Add_Friend">
-        <div class="form-group">
-            <label for="{{friend}}">{{friend}}</label>
-            <button name={{friend}} type="submit" class="btn btn-default">Remove: {{friend}}</button>
-        </div>
+    <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" name = 'friends' id="dropdownMenu1" data-toggle="dropdown"
+                aria-expanded="true">
+            My Friends
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            {% for friend in friends %}
+                <li>
+                    <button type="submit" value="{{friend}}" class="btn btn-default">{{friend}}</button>
+                </li>>
+            {% endfor %}
+        </ul>
+    </div>
     </FORM>
 
     {% if removed==True %}
