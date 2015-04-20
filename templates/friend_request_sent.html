@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <link type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
-    <title>MyLink-Friend-Request-Sent-Page</title>
-</head>
+{% extends "layout.html" %}
+{% block title %}MyLink Friend Request Sent Page{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block body %}
 <body>
     <H2 style="text-align: center">MyLink-Friend Request Sent Page</H2>
     <div class="container">
@@ -18,4 +18,4 @@
         </FORM>
     </div>
 </body>
-</html>
+{% endblock %}
