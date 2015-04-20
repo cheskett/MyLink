@@ -8,19 +8,20 @@
     <h3 class="modal-title">Albums </h3>
     <br>
 
-
+    <form ACTION="/upload" METHOD="POST">
     <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+        <button class="btn btn-default dropdown-toggle" type="button" name = 'albums' id="dropdownMenu1" data-toggle="dropdown"
                 aria-expanded="true">
             My Albums
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
             {% for album in albums %}
-                <li><a role="menuitem" tabindex="-1" href="{{ album.url }}">{{ album.name }}</a></li>
+                <li><a role="menuitem" tabindex="-1" href="{{ album['name'] }}">{{ album['name'] }}</a></li>
             {% endfor %}
         </ul>
     </div>
+    </form>
 
 
     <form ACTION="/upload" METHOD="POST" enctype=multipart/form-data>
