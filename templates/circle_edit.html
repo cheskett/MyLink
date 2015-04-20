@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block title %}MyLink Circle Edit Page{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block body %}
+
+<H2 style="text-align: center">MyLink-Circle Edit Page</H2>
+<div class="container">
+    <H3>Friends in the Circle:</H3>
+
+    {% for friend in friends %}
+    <FORM METHOD=post ACTION="/Remove_Friend">
+        <input type="hidden" name="friend" value="{{friend}}">
+        <div class="form-group">
+            <label for="{{friend}}">{{friend}}</label>
+            <button name={{friend}} type="submit" class="btn btn-default">Remove: {{friend}}</button>
+        </div>
+    </FORM>
+    {% endfor %}
+
+    <FORM METHOD=post ACTION="/Add_Friend">
+        <div class="form-group">
+            <label for="{{friend}}">{{friend}}</label>
+            <button name={{friend}} type="submit" class="btn btn-default">Remove: {{friend}}</button>
+        </div>
+    </FORM>
+
+    {% if removed==True %}
+        <h4>Friend Removed.</h4>
+    {% endif %}
+    {% if added==True %}
+        <h4>Friend Added.</h4>
+    {% endif %}
+    {% if exists==True %}
+        <h4 style="color: red">Friend Already in Circle.</h4>
+    {% endif %}
+
+    <FORM METHOD=get ACTION="/return">
+        <button type="submit" class="btn btn-default">Return</button>
+    </FORM>
+</div>
+
+{% endblock %}

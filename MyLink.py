@@ -6,7 +6,8 @@ from flask import Flask, abort, flash
 from flask import g, render_template, request, session, send_from_directory, redirect, url_for
 from itsdangerous import BadSignature
 
-from tools.user_data import change_user_info, friends_data, unfriend
+from tools.user_data import change_user_info, friends_data, unfriend, circles_page_db, circle_create, circle_edit, \
+    circle_remove
 from tools.friends import request_friend
 from tools.login import get_serializer, user_exists, set_user_active
 from tools.login import login_post, register_user, check_password, change_password_db
@@ -210,6 +211,33 @@ def circles_page():
     if mysession.check_session() == 'passed':
         username = session['username']
         return circles_page_db(username,g.db)
+    else:
+        return render_template('login.html', bad_session=True)
+
+@app.route('/Create_Circle', methods=['POST'])
+def create_c():
+    if mysession.check_session() == 'passed':
+        name = request.form["name"]
+        username = session['username']
+        return circle_create(username,name,g.db)
+    else:
+        return render_template('login.html', bad_session=True)
+
+@app.route('/Edit_Circle', methods=['POST'])
+def edit_c():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        name = request.form["circle"]
+        return circle_edit(username, name ,g.db)
+    else:
+        return render_template('login.html', bad_session=True)
+
+@app.route('/Remove_Circle', methods=['POST'])
+def remove_c():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        name = request.form["circle"]
+        return circle_remove(username,name ,g.db)
     else:
         return render_template('login.html', bad_session=True)
 
