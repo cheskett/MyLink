@@ -39,7 +39,7 @@
 
 
     {% for request in requests %}
-    <FORM METHOD=post ACTION="/Deny_Request">
+    <FORM METHOD=post ACTION="/Unfriend">
         <input type="hidden" name="other" value="{{request}}">
         <div class="form-group"><label for="{{request}}">{{request}}</label>
             <button name={{request}} type="submit" class="btn btn-default">Deny Request from {{request}}</button>
@@ -51,6 +51,9 @@
     <FORM METHOD=get ACTION="/return">
         <button type="submit" class="btn btn-default">Return</button>
     </FORM>
+    {% if bool==True %}
+        <h4 style="color: red">Friend Action Completed.</h4>
+    {% endif %}
 </div>
 
 </body>

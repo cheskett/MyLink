@@ -44,7 +44,7 @@ def change_user_info(username, form, db):
         change_col_db(username, "phone", phone, db)
 
 
-def friends_data(username, db):
+def friends_data(username, db, bool):
     friends=[]
     requested=[]
     requests=[]
@@ -73,4 +73,16 @@ def friends_data(username, db):
 
     except sqlite3.OperationalError:
         traceback.print_exc()
-    return render_template('friends_page.html', friends=friends, requests=requests, requested=requested)
+    return render_template('friends_page.html', friends=friends, requests=requests, requested=requested, bool=bool)
+
+
+def unfriend(username,other, db):
+    try:
+        c = db.cursor()
+        t = (username,other, other, username)
+        c.execute('Delete FROM friends WHERE (user1=? AND user2=?) OR (user1=? AND user2=?) ', t)
+        db.commit()
+        return friends_data(username, db, True)
+    except sqlite3.OperationalError:
+        traceback.print_exc()
+    return friends_data(username, db, False)

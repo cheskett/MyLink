@@ -6,7 +6,7 @@ from flask import Flask, abort, flash
 from flask import g, render_template, request, session, send_from_directory, redirect, url_for
 from itsdangerous import BadSignature
 
-from tools.user_data import change_user_info, friends_data
+from tools.user_data import change_user_info, friends_data, unfriend
 from tools.friends import request_friend
 from tools.login import get_serializer, user_exists, set_user_active
 from tools.login import login_post, register_user, check_password, change_password_db
@@ -204,15 +204,24 @@ def friend_request_sent():
 def friends_page():
     if mysession.check_session() == 'passed':
         username = session['username']
-        return friends_data(username, g.db)
+        return friends_data(username, g.db, False)
     else:
         return render_template('login.html', bad_session=True)
+
+@app.route('/Unfriend', methods=['POST'])
+def unfriend_event():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        other = request.form["other"]
+        return unfriend(username,other, g.db)
+    else:
+        return render_template('login.html', bad_session=True)
+
 
 @app.route('/images/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
-
 
 def allowed_file(filename):
     return '.' in filename and \
