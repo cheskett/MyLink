@@ -106,7 +106,7 @@ def circle_create(username,name,db):
     return circle_edit(username, name ,db)
 
 def circle_edit(username, name ,db):
-    friends=[]
+    friends=['lol', 'this']
     return render_template('circle_edit.html', friends=friends)
 
 def circle_remove(username,name ,db):
