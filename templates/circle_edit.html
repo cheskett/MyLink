@@ -9,7 +9,7 @@
 <div class="container">
     <H3>Friends in the Circle:</H3>
     <hr>
-    {% for friend in friends %}
+    {% for friend in friendsC %}
     <FORM METHOD=post ACTION="/Remove_Friend">
         <input type="hidden" name="friend" value="{{friend}}">
         <div class="form-group">
