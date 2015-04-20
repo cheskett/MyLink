@@ -86,3 +86,28 @@ def unfriend(username,other, db):
     except sqlite3.OperationalError:
         traceback.print_exc()
     return friends_data(username, db, False)
+
+def circles_page_db(username, db):
+    try:
+        c = db.cursor()
+        t = (username,)
+        c.execute('Select cname From circles WHERE creator=?', t)
+        circles=[]
+        for row in c:
+            circles.append(row[0])
+
+        return render_template('circle_page.html', circles=circles)
+    except sqlite3.OperationalError:
+        traceback.print_exc()
+    return render_template('circle_page.html', circles=circles)
+
+
+def circle_create(username,name,db):
+    return circle_edit(username, name ,db)
+
+def circle_edit(username, name ,db):
+    friends=[]
+    return render_template('circle_edit.html', friends=friends)
+
+def circle_remove(username,name ,db):
+    return 0
