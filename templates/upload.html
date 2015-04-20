@@ -1,5 +1,9 @@
-<!DOCTYPE html>
- <HTML>
+{% extends "layout.html" %}
+{% block title %}MyLink Home{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{%  block body %}
 
         <form ACTION="/upload" METHOD="POST" enctype=multipart/form-data>
             <input type="hidden" name="action" value="upload-pic-data">
@@ -8,5 +12,4 @@
             <br>
             <input type="submit" value="Press"> to upload the picture!
         </form>
-
-</HTML>
+{% endblock %}
