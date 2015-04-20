@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <link type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
-    <title>MyLink-Friends-Page</title>
-</head>
+{% extends "layout.html" %}
+{% block title %}MyLink Friends{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{%  block body %}
 <body>
 <H2 style="text-align: center">MyLink-Friends Page</H2>
 
@@ -58,5 +58,4 @@
     {% endif %}
 </div>
 
-</body>
-</html>
+{% endblock %}

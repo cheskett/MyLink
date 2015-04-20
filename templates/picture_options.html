@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>MyLink-Main_Page</title>
-</head>
+{% extends "layout.html" %}
+{% block title %}MyLink Home{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{%  block body %}
 <body>
         <!--<H1> Picture Share Admin Options</H1>-->
         <H1> MyLink Main Page</H1>
@@ -21,4 +21,4 @@
         <li> <a href="/Log_Out">Logout</a>
         </ul>
 </body>
-</html>
+{%  endblock %}
