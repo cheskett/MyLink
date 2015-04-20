@@ -10,7 +10,7 @@ from tools.user_data import change_user_info, friends_data, unfriend
 from tools.friends import request_friend
 from tools.login import get_serializer, user_exists, set_user_active
 from tools.login import login_post, register_user, check_password, change_password_db
-from tools import mysession
+from tools import mysession, pictures
 
 
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
@@ -97,19 +97,7 @@ def upload():
             return render_template("upload.html")
         else:
             file = request.files['file']
-            # Get user
-            user = session['username']
-
-            # Check if the file was uploaded
-            if file and allowed_file(file.filename):
-                # Make the filename safe, remove unsupported chars
-                filename = file.filename.replace(" ", "_")
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                return render_template("upload_success.html",
-                                       filename=filename)
-
-            else:
-                return 'No file was uploaded'
+            pictures.upload_image(file)
     else:
         return render_template('login.html',
                                bad_session=True)
