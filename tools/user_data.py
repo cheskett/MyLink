@@ -218,3 +218,9 @@ def circle_remove_f(username,name, circle ,db):
     except sqlite3.OperationalError:
         traceback.print_exc()
     return circle_edit(username, circle ,db, False, False, False)#or F, F, T
+
+def your_posts_home(username,db):
+    return render_template('your_posts_home.html')
+
+def friends_posts_home(username,db):
+    return render_template('friends_posts_home.html')

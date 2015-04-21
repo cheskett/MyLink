@@ -7,7 +7,7 @@ from flask import g, render_template, request, session, send_from_directory, red
 from itsdangerous import BadSignature
 
 from tools.user_data import change_user_info, friends_data, unfriend, circles_page_db, circle_create, circle_edit, \
-    circle_remove, circle_add_f, circle_remove_f
+    circle_remove, circle_add_f, circle_remove_f, friends_posts_home, your_posts_home
 from tools.friends import request_friend
 from tools.login import get_serializer, user_exists, set_user_active
 from tools.login import login_post, register_user, check_password, change_password_db
@@ -275,7 +275,21 @@ def remove_f():
     else:
         return render_template('login.html', bad_session=True)
 
+@app.route('/Friend_Posts', methods=['GET'])
+def create_post():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        return friends_posts_home(username,g.db)
+    else:
+        return render_template('login.html', bad_session=True)
 
+@app.route('/Your_Posts', methods=['GET'])
+def create_post():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        return your_posts_home(username,g.db)
+    else:
+        return render_template('login.html', bad_session=True)
 # @app.route('/images/<filename>')
 # def uploaded_file(filename):
 #     return send_from_directory(app.config['UPLOAD_FOLDER'],
