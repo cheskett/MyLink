@@ -108,7 +108,8 @@ def upload():
         else:
             if 'privacy' in request.form:
                 pictures.create_album(request.form)
-                return render_template("upload.html", albums=albums, images=images)
+                return redirect(url_for('upload'))
+                # return render_template("upload.html", albums=albums, images=images)
             else:
                 file = request.files['file']
                 album = request.form['album']
@@ -376,6 +377,9 @@ def uploaded_file(user, filename):
     if mysession.check_session() == 'passed':
         return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER'], user),
                                    filename)
+    else:
+        flash("You must login to access images")
+        return redirect(url_for('logout'))
 
 
 def allowed_file(filename):

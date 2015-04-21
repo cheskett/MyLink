@@ -20,6 +20,13 @@
         });
     </script>
 
+
+    <script type="text/javascript">
+        $(function () {
+            $('#gallery').jGallery();
+        });
+    </script>
+
     <h2 class="modal-title">Albums </h2>
     <br>
 
@@ -82,7 +89,7 @@
             <br>
             <button type="submit" class="btn btn-primary">Upload Picture</button>
         </form>
-    <br>
+        <br>
     </div>
 
     {% if images %}
@@ -93,11 +100,6 @@
             {% endfor %}
         </div>
 
-        <script type="text/javascript">
-            $(function () {
-                $('#gallery').jGallery();
-            });
-        </script>
     {% else %}
         <h4>No images to display!</h4>
     {% endif %}

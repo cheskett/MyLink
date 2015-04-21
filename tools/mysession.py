@@ -73,5 +73,6 @@ def logout(user):
     t = (user,)
     # c.execute('SELECT * FROM sessions  WHERE user =?', t)
     c.execute('DELETE FROM sessions WHERE user =?', t)
+    g.db.commit()
 
 
