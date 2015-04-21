@@ -93,12 +93,19 @@ def new_album():
 @app.route('/upload', methods=['POST', 'GET'])
 def upload():
     if mysession.check_session() == 'passed':
+        albums = pictures.get_albums()
+        cur_album = None
+        selected = request.args.get('selected')
+        if selected is not None:
+            cur_album = selected
+        elif albums:
+            cur_album = albums[0]['name']
+        images = pictures.get_pictures(session['username'], cur_album)
         if request.method == "GET":
-            print('IN UPLOAD: ' + session['username'])
-            return render_template("upload.html")
+            return render_template("upload.html", albums=albums, images=images)
         else:
             file = request.files['file']
-            pictures.upload_image(file)
+            return pictures.upload_image(file)
     else:
         return render_template('login.html',
                                bad_session=True)
@@ -161,10 +168,11 @@ def change_info_event():
     if mysession.check_session() == 'passed':
         username = session['username']
         form = request.form
-        change_user_info(username,form, g.db)
+        change_user_info(username, form, g.db)
         return render_template('change_user_success.html')
     else:
         return render_template('login.html', bad_session=False)
+
 
 @app.route('/Friend_Request_Page')
 def friend_request_page():
@@ -197,14 +205,16 @@ def friends_page():
     else:
         return render_template('login.html', bad_session=True)
 
+
 @app.route('/Unfriend', methods=['POST'])
 def unfriend_event():
     if mysession.check_session() == 'passed':
         username = session['username']
         other = request.form["other"]
-        return unfriend(username,other, g.db)
+        return unfriend(username, other, g.db)
     else:
         return render_template('login.html', bad_session=True)
+
 
 @app.route('/Circles_Page', methods=['GET'])
 def circles_page():
@@ -214,14 +224,16 @@ def circles_page():
     else:
         return render_template('login.html', bad_session=True)
 
+
 @app.route('/Create_Circle', methods=['POST'])
 def create_c():
     if mysession.check_session() == 'passed':
         name = request.form["name"]
         username = session['username']
-        return circle_create(username,name,g.db)
+        return circle_create(username, name, g.db)
     else:
         return render_template('login.html', bad_session=True)
+
 
 @app.route('/Edit_Circle', methods=['POST'])
 def edit_c():
@@ -231,6 +243,7 @@ def edit_c():
         return circle_edit(username, name ,g.db, False, False, False)
     else:
         return render_template('login.html', bad_session=True)
+
 
 @app.route('/Remove_Circle', methods=['POST'])
 def remove_c():
@@ -263,10 +276,18 @@ def remove_f():
         return render_template('login.html', bad_session=True)
 
 
-@app.route('/images/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'],
-                               filename)
+# @app.route('/images/<filename>')
+# def uploaded_file(filename):
+#     return send_from_directory(app.config['UPLOAD_FOLDER'],
+#                                filename)
+
+
+@app.route('/images/<user>/<filename>')
+def uploaded_file(user, filename):
+    if mysession.check_session() == 'passed':
+        return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER'], user),
+                                   filename)
+
 
 def allowed_file(filename):
     return '.' in filename and \

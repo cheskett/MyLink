@@ -8,22 +8,42 @@
     <h3 class="modal-title">Albums </h3>
     <br>
 
-    <form ACTION="/upload" METHOD="POST">
 
-    <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" name = 'albums' id="dropdownMenu1" data-toggle="dropdown"
-                aria-expanded="true">
-            My Albums
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-            {% for album in albums %}
-                <li><a role="menuitem" tabindex="-1" href="{{ album['name'] }}">{{ album['name'] }}</a></li>
+
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" name='albums' id="dropdownMenu1"
+                    data-toggle="dropdown"
+                    aria-expanded="true">
+                My Albums
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                {% for album in albums %}
+                    <input type="hidden" name="hid_album" value="{{ album['name'] }}">
+                    <li><a role="menuitem" tabindex="-1" href="{{ url_for( 'upload', selected=album['name']) }}">{{ album['name'] }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+
+    <br>
+
+    {% if images %}
+        <div id="gallery">
+            {% for image in images %}
+                <a href="images/{{ session['username'] }}/{{ image['path'] }}"><img
+                        src="images/{{ session['username'] }}/{{ image['path'] }}" alt="{{ image['path'] }}"/></a>
             {% endfor %}
-        </ul>
-    </div>
-    </form>
+        </div>
 
+        <script type="text/javascript">
+            $(function () {
+                $('#gallery').jGallery();
+            });
+        </script>
+    {% else %}
+        <h4>You have no albums!</h4>
+    {% endif %}
 
     <form ACTION="/upload" METHOD="POST" enctype=multipart/form-data>
         <input type="hidden" name="action" value="upload-pic-data">
