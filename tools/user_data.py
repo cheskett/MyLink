@@ -220,7 +220,14 @@ def circle_remove_f(username,name, circle ,db):
     return circle_edit(username, circle ,db, False, False, False)#or F, F, T
 
 def your_posts_home(username,db):
-    return render_template('your_posts_home.html')
+    posts=[]
+
+    return render_template('your_posts_home.html',posts=posts)
 
 def friends_posts_home(username,db):
+    posts=[]
+    
+    return render_template('friends_posts_home.html', posts=posts)
+
+def create_post_db(username,db):
     return render_template('friends_posts_home.html')
