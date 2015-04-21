@@ -1,6 +1,7 @@
 __author__ = 'Cameron'
 import os
-from flask import render_template, current_app as app, session, g
+from traceback import print_exc
+from flask import render_template, current_app as app, session, g, flash
 
 
 def dict_factory(cursor, row):
@@ -15,11 +16,18 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
 
 
-def upload_image(file):
-    if file and allowed_file(file.filename):
+def upload_image(file, album):
+    if file and album and allowed_file(file.filename):
         # Make the filename safe, remove unsupported chars
         filename = file.filename.replace(" ", "_")
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        savepath = os.path.join(app.config['UPLOAD_FOLDER'], session['username'])
+        if not os.path.exists(savepath):
+            os.makedirs(savepath)
+        file.save(os.path.join(savepath, filename))
+        c = g.db.cursor()
+        t = (filename, album, session['username'])
+        c.execute("INSERT INTO pictures (path, album, owner) VALUES (?,?,?)", t)
+        g.db.commit()
         return render_template("upload_success.html",
                                filename=filename)
 
@@ -45,3 +53,18 @@ def get_pictures(user, album):
     c.execute(sql, t)
     pictures = c.fetchall()
     return pictures
+
+
+def create_album(form):
+    privacy = form['privacy']
+    title = form['title']
+    t = (title, session['username'], privacy)
+    c = g.db.cursor()
+    sql = "INSERT INTO albums (name, owner, visibility) VALUES (?,?,?)"
+    try:
+        c.execute(sql, t)
+        g.db.commit()
+        flash("Album created successfully")
+    except:
+        print_exc()
+        flash("Error creating album")

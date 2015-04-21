@@ -3,10 +3,10 @@
 {% block head %}
     {{ super() }}
 {% endblock %}
-{%  block body %}
+{% block body %}
 
     <H2>The picture {{ filename }} was uploaded successfully</H2>
     <br>
-    <img src="images/{{ filename }}">
+    <img src="images/{{ session['username'] }}/{{ filename }}">
 
 {% endblock %}

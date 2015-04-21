@@ -106,8 +106,13 @@ def upload():
         if request.method == "GET":
             return render_template("upload.html", albums=albums, images=images)
         else:
-            file = request.files['file']
-            return pictures.upload_image(file)
+            if 'privacy' in request.form:
+                pictures.create_album(request.form)
+                return render_template("upload.html", albums=albums, images=images)
+            else:
+                file = request.files['file']
+                album = request.form['album']
+                return pictures.upload_image(file, album)
     else:
         return render_template('login.html',
                                bad_session=True)
@@ -293,63 +298,69 @@ def friend_posts():
 def your_posts():
     if mysession.check_session() == 'passed':
         username = session['username']
-        return your_posts_home(username,g.db)
+        return your_posts_home(username, g.db)
     else:
         return render_template('login.html', bad_session=True)
+
 
 @app.route('/Create_Post_Page', methods=['GET'])
 def create_post_page():
     if mysession.check_session() == 'passed':
         username = session['username']
-        return create_post_page_db(username,g.db)
+        return create_post_page_db(username, g.db)
     else:
         return render_template('login.html', bad_session=True)
+
 
 @app.route('/Create_Post', methods=['POST'])
 def create_post():
     if mysession.check_session() == 'passed':
         username = session['username']
-        postTitle=request.form["postTitle"]
-        postText=request.form["postText"]
-        return create_post_db(username,postTitle,postText,g.db)
+        postTitle = request.form["postTitle"]
+        postText = request.form["postText"]
+        return create_post_db(username, postTitle, postText, g.db)
     else:
         return render_template('login.html', bad_session=True)
+
 
 @app.route('/Remove_Post', methods=['POST'])
 def remove_post():
     if mysession.check_session() == 'passed':
         username = session['username']
-        postid=request.form["postid"]
-        return remove_post_db(username,postid,g.db)
+        postid = request.form["postid"]
+        return remove_post_db(username, postid, g.db)
     else:
         return render_template('login.html', bad_session=True)
+
 
 @app.route('/Edit_Post_Circles', methods=['POST'])
 def edit_post_circles():
     if mysession.check_session() == 'passed':
         username = session['username']
-        postid=request.form["postid"]
-        return edit_post_circles_db(username,postid,g.db, False,False)
+        postid = request.form["postid"]
+        return edit_post_circles_db(username, postid, g.db, False, False)
     else:
         return render_template('login.html', bad_session=True)
+
 
 @app.route('/Remove_Circle_Post', methods=['POST'])
 def remove_post_circles():
     if mysession.check_session() == 'passed':
         username = session['username']
-        cid=request.form["circle"]
-        postid=request.form["postid"]
-        return r_post_circles_db(username,cid,postid,g.db)
+        cid = request.form["circle"]
+        postid = request.form["postid"]
+        return r_post_circles_db(username, cid, postid, g.db)
     else:
         return render_template('login.html', bad_session=True)
+
 
 @app.route('/Add_Circle_Post', methods=['POST'])
 def add_post_circles():
     if mysession.check_session() == 'passed':
         username = session['username']
-        cid=request.form["circle"]
-        postid=request.form["postid"]
-        return a_post_circles_db(username,cid,postid,g.db)
+        cid = request.form["circle"]
+        postid = request.form["postid"]
+        return a_post_circles_db(username, cid, postid, g.db)
     else:
         return render_template('login.html', bad_session=True)
 
@@ -357,7 +368,7 @@ def add_post_circles():
 # @app.route('/images/<filename>')
 # def uploaded_file(filename):
 # return send_from_directory(app.config['UPLOAD_FOLDER'],
-#                                filename)
+# filename)
 
 
 @app.route('/images/<user>/<filename>')

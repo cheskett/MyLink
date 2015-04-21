@@ -5,28 +5,85 @@
 {% endblock %}
 {% block body %}
 
-    <h3 class="modal-title">Albums </h3>
+    <script>
+        $(document).ready(function () {
+            $("#new_album").click(function () {
+                $("#new_album_form").fadeIn();
+                $("#upload_image").hide();
+            });
+        });
+        $(document).ready(function () {
+            $("#new_image").click(function () {
+                $("#upload_image").fadeIn();
+                $("#new_album_form").hide();
+            });
+        });
+    </script>
+
+    <h2 class="modal-title">Albums </h2>
     <br>
 
 
 
-        <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" name='albums' id="dropdownMenu1"
-                    data-toggle="dropdown"
-                    aria-expanded="true">
-                My Albums
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                {% for album in albums %}
-                    <input type="hidden" name="hid_album" value="{{ album['name'] }}">
-                    <li><a role="menuitem" tabindex="-1" href="{{ url_for( 'upload', selected=album['name']) }}">{{ album['name'] }}</a></li>
-                {% endfor %}
-            </ul>
-        </div>
+    <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" name='albums' id="dropdownMenu1"
+                data-toggle="dropdown"
+                aria-expanded="true">
+            My Albums
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            {% for album in albums %}
+                <input type="hidden" name="hid_album" value="{{ album['name'] }}">
+                <li><a role="menuitem" tabindex="-1"
+                       href="{{ url_for( 'upload', selected=album['name']) }}">{{ album['name'] }}</a></li>
+            {% endfor %}
+        </ul>
+        <button class="btn btn-default" id="new_album">New Album</button>
+        <button class="btn btn-default" id="new_image">Upload Image</button>
+    </div>
 
+
+
+    <div id="new_album_form" class="container-fluid" style="display: none">
+        <h3>Create New Album </h3>
+
+        <form name="create_album" ACTION="/upload" METHOD="POST" enctype=multipart/form-data>
+            <label class="form-group" for="album_title">Album Title</label>
+            <input name="title" id="album_title" class="form-control" style="width: 70%;">
+            <label class="form-group" for="privacy">Privacy</label>
+            <select name="privacy" id="privacy" class="form-control" style="width: 70%">
+                <option>public</option>
+                <option>private</option>
+            </select>
+            <button type="submit" class="btn btn-primary" style="margin-top: 15px">Create Album</button>
+        </form>
+    </div>
 
     <br>
+
+    <div id="upload_image" class="container" style="display: none">
+        <h3 class="modal-title">Upload Image </h3>
+
+        <form name="upload" ACTION="/upload" METHOD="POST" enctype=multipart/form-data>
+            <input type="hidden" name="action" value="upload-pic-data">
+            <BR>
+            <I>Browse Picture:</I> <input class="btn btn-default" TYPE="file" NAME="file">
+            <br>
+            <label for="album_select">Select Album: </label>
+
+            <div class="dropdown">
+                <select name="album" id="album_select" class="form-control" style="width: 40%">
+                    {% for album in albums %}
+                        <option value="{{ album['name'] }}">{{ album['name'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Upload Picture</button>
+        </form>
+    <br>
+    </div>
 
     {% if images %}
         <div id="gallery">
@@ -45,11 +102,5 @@
         <h4>No images to display!</h4>
     {% endif %}
 
-    <form ACTION="/upload" METHOD="POST" enctype=multipart/form-data>
-        <input type="hidden" name="action" value="upload-pic-data">
-        <BR>
-        <I>Browse Picture:</I> <INPUT TYPE="file" NAME="file">
-        <br>
-        <input type="submit" value="Press"> to upload the picture!
-    </form>
+
 {% endblock %}
