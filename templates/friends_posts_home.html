@@ -1,8 +1,25 @@
 {% extends "layout.html" %}
-{% block title %}MyLink Home{% endblock %}
+{% block title %}MyLink Friends' Posts Page{% endblock %}
 {% block head %}
     {{ super() }}
 {% endblock %}
 {%  block body %}
+
+<H2 style="text-align: center">MyLink-Friends' Posts Page</H2>
+
+<div class="container">
+    <H3>Friends' Posts:</H3>
+    <hr>
+    {% for post in posts %}
+    <H2>{{post[0]}}</H2><H3>{{post[1]}}</H3>
+    <p1>{{post[2]}}</p1>
+    <hr>
+    {% endfor %}
+
+    <FORM METHOD=get ACTION="/return">
+        <button type="submit" class="btn btn-default">Return</button>
+    </FORM>
+</div>
+
 
 {%  endblock %}

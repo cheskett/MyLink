@@ -276,7 +276,7 @@ def remove_f():
         return render_template('login.html', bad_session=True)
 
 @app.route('/Friend_Posts', methods=['GET'])
-def create_post():
+def friend_posts():
     if mysession.check_session() == 'passed':
         username = session['username']
         return friends_posts_home(username,g.db)
@@ -284,6 +284,14 @@ def create_post():
         return render_template('login.html', bad_session=True)
 
 @app.route('/Your_Posts', methods=['GET'])
+def your_posts():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        return your_posts_home(username,g.db)
+    else:
+        return render_template('login.html', bad_session=True)
+
+@app.route('/Create_Post', methods=['GET'])
 def create_post():
     if mysession.check_session() == 'passed':
         username = session['username']
