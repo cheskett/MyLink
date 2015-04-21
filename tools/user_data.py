@@ -202,13 +202,13 @@ def circle_remove_f(username,name, circle ,db):
         c=db.cursor()
         t=(circle,username,)
         c.execute('SELECT cid FROM circles WHERE cname=? AND creator=?',t)
-        for row in c:
+        for row in c.fetchall():
             heldID=row[0]
         if heldID==-1:
             return circles_page_db(username, db, False, False)
         t=(heldID, name)
         c.execute('SELECT * FROM circle_members WHERE cid=? AND user=?',t)
-        for row in c:
+        for row in c.fetchall():
             test=1
         if test==-1:
             return circle_edit(username, circle ,db, False, False, False)
@@ -226,7 +226,7 @@ def your_posts_home(username,db):
         c=db.cursor()
         t=(username,)
         c.execute('SELECT postTitle, user, postText FROM Posts WHERE user=?',t)
-        for row in c:
+        for row in c.fetchall():
             post = (row[0], row[1], row[2])
             posts.append(post)
         return render_template('your_posts_home.html',posts=posts)
@@ -241,7 +241,7 @@ def friends_posts_home(username,db):
         t=(username,)
         c.execute('SELECT postTitle, user, postText FROM Posts WHERE postid= ANY(SELECT postid From postTarget \
         WHERE cid= ANY( Select cid From circle_members WHERE user=?))',t)
-        for row in c:
+        for row in c.fetchall():
             post = (row[0], row[1], row[2])
             posts.append(post)
         return render_template('friends_posts_home.html', posts=posts)
