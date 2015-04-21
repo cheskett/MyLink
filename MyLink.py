@@ -50,7 +50,8 @@ def app_login():
 def logout():
     if mysession.check_session() == 'passed':
         username = session['username']
-        mysession.logout(username);
+        mysession.logout(username)
+        session.clear()
         return render_template('login.html')
     else:
         return render_template('login.html', bad_session=True)
@@ -220,7 +221,7 @@ def unfriend_event():
 def circles_page():
     if mysession.check_session() == 'passed':
         username = session['username']
-        return circles_page_db(username,g.db, False, False)
+        return circles_page_db(username, g.db, False, False)
     else:
         return render_template('login.html', bad_session=True)
 
@@ -240,7 +241,7 @@ def edit_c():
     if mysession.check_session() == 'passed':
         username = session['username']
         name = request.form["circle"]
-        return circle_edit(username, name ,g.db, False, False, False)
+        return circle_edit(username, name, g.db, False, False, False)
     else:
         return render_template('login.html', bad_session=True)
 
@@ -250,9 +251,10 @@ def remove_c():
     if mysession.check_session() == 'passed':
         username = session['username']
         name = request.form["circle"]
-        return circle_remove(username,name ,g.db)
+        return circle_remove(username, name, g.db)
     else:
         return render_template('login.html', bad_session=True)
+
 
 @app.route('/Add_Friend', methods=['POST'])
 def add_f():
@@ -260,10 +262,11 @@ def add_f():
         username = session['username']
         name = request.form["name"]
         circle = request.form["circle"]
-        #print("user:"+username+" name:"+name+" circle: "+ circle)
-        return circle_add_f(username,name, circle ,g.db)
+        # print("user:"+username+" name:"+name+" circle: "+ circle)
+        return circle_add_f(username, name, circle, g.db)
     else:
         return render_template('login.html', bad_session=True)
+
 
 @app.route('/Remove_Friend', methods=['POST'])
 def remove_f():
@@ -271,17 +274,19 @@ def remove_f():
         username = session['username']
         name = request.form["name"]
         circle = request.form["circle"]
-        return circle_remove_f(username,name, circle ,g.db)
+        return circle_remove_f(username, name, circle, g.db)
     else:
         return render_template('login.html', bad_session=True)
+
 
 @app.route('/Friend_Posts', methods=['GET'])
 def friend_posts():
     if mysession.check_session() == 'passed':
         username = session['username']
-        return friends_posts_home(username,g.db)
+        return friends_posts_home(username, g.db)
     else:
         return render_template('login.html', bad_session=True)
+
 
 @app.route('/Your_Posts', methods=['GET'])
 def your_posts():
@@ -295,12 +300,14 @@ def your_posts():
 def create_post():
     if mysession.check_session() == 'passed':
         username = session['username']
-        return your_posts_home(username,g.db)
+        return your_posts_home(username, g.db)
     else:
         return render_template('login.html', bad_session=True)
+
+
 # @app.route('/images/<filename>')
 # def uploaded_file(filename):
-#     return send_from_directory(app.config['UPLOAD_FOLDER'],
+# return send_from_directory(app.config['UPLOAD_FOLDER'],
 #                                filename)
 
 
