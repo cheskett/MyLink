@@ -9,12 +9,13 @@
 <div class="container">
     <H3>Friends in the Circle:</H3>
     <hr>
-    {% for friend in friendsC %}
+    {% for friend in friendsc %}
     <FORM METHOD=post ACTION="/Remove_Friend">
-        <input type="hidden" name="friend" value="{{friend}}">
+        <input type="hidden" name="name" value="{{friend}}">
+        <input type="hidden" name="circle" value="{{circle}}">
         <div class="form-group">
             <label for="{{friend}}">{{friend}}</label>
-            <button name={{friend}} type="submit" class="btn btn-default">Remove: {{friend}}</button>
+            <button type="submit" class="btn btn-default">Remove: {{friend}}</button>
         </div>
     </FORM>
     {% endfor %}
@@ -29,8 +30,9 @@
         <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
             {% for friend in friends %}
                 <li>
-                    <button type="submit" value="{{friend}}" class="btn btn-default">{{friend}}</button>
-                </li>>
+                    <input type="hidden" name="circle" value="{{circle}}">
+                    <button type="submit" name="name" value="{{friend}}" class="btn btn-default">{{friend}}</button>
+                </li>
             {% endfor %}
         </ul>
     </div>

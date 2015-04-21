@@ -87,7 +87,7 @@ def unfriend(username,other, db):
         traceback.print_exc()
     return friends_data(username, db, False)
 
-def circles_page_db(username, db):
+def circles_page_db(username, db, bool1, bool2):
     try:
         c = db.cursor()
         t = (username,)
@@ -96,20 +96,125 @@ def circles_page_db(username, db):
         for row in c:
             circles.append(row[0])
 
-        return render_template('circle_page.html', circles=circles)
+        return render_template('circle_page.html', circles=circles, removed=bool1, exists=bool2)
     except sqlite3.OperationalError:
         traceback.print_exc()
     return render_template('circle_page.html', circles=circles)
 
 
 def circle_create(username,name,db):
-    return circle_edit(username, name ,db)
+    try:
+        c=db.cursor()
+        t=(name,username,)
+        c.execute('SELECT * FROM circles WHERE cname=? AND creator=?',t)
+        for row in c:
+            return circles_page_db(username, db, False, True)
+        c.execute('INSERT INTO circles (cname, creator) VALUES (?,?)',t)
+        db.commit()
+        return circle_edit(username, name ,db, False, False, False)
+    except sqlite3.OperationalError:
+        traceback.print_exc()
+    return circles_page_db(username, db, False, False)
 
-def circle_edit(username, name ,db):
+
+def circle_edit(username, name ,db, removed, added, exists):
     friends=[]
     friendsc=[]
+    heldID=-1
+    try:
+        c=db.cursor()
+        t=(name,username,)
+        c.execute('SELECT cid FROM circles WHERE cname=? AND creator=?',t)
+        for row in c:
+            heldID=row[0]
+        if heldID==-1:
+            print("Fail" +  username + " " + name)
+            return circles_page_db(username, db, False, False)
 
-    return render_template('circle_edit.html', friends=friends,friendsc=friendsc)
+        t=(heldID,)
+        c.execute('SELECT user From circle_members WHERE cid=?',t)
+        #print(c)
+        for row in c:
+            #print(row)
+            friendsc.append(row[0])
+
+        t = (username,)
+        c.execute('SELECT user1 FROM friends WHERE user2=? AND status=1', t)
+        for row in c:
+            friends.append(row[0])
+        c.execute('SELECT user2 FROM friends WHERE user1=? AND status=1', t)
+        for row in c:
+            friends.append(row[0])
+        return render_template('circle_edit.html', friends=friends,friendsc=friendsc, circle=name, removed=removed, added=added, exists=exists)
+    except sqlite3.OperationalError:
+        traceback.print_exc()
+    return circles_page_db(username, db, False, False)
 
 def circle_remove(username,name ,db):
-    return circle_edit(username,name ,db)
+    heldID=-1
+    try:
+        c=db.cursor()
+        t=(name,username,)
+        c.execute('SELECT cid FROM circles WHERE cname=? AND creator=?',t)
+        for row in c:
+            heldID=row[0]
+        if heldID==-1:
+            return circles_page_db(username, db, False, False)
+
+        c.execute('DELETE FROM circles WHERE cname=? AND creator=?',t)
+        t=(heldID,)
+        c.execute('DELETE FROM circle_members WHERE cid=?',t)
+        db.commit()
+        return circles_page_db(username, db, True, False)
+    except sqlite3.OperationalError:
+        traceback.print_exc()
+    return circles_page_db(username, db, False, False)
+
+def circle_add_f(username,name, circle ,db):
+    heldID=-1
+    test=-1
+    try:
+        c=db.cursor()
+        t=(circle,username,)
+        c.execute('SELECT cid FROM circles WHERE cname=? AND creator=?',t)
+        for row in c:
+            heldID=row[0]
+        if heldID==-1:
+            #print("FAIL")
+            return circles_page_db(username, db, False, False)
+        t=(heldID, name,)
+        c.execute('SELECT * FROM circle_members WHERE cid=? AND user=?',t)
+        for row in c:
+            test=1
+        if test==1:
+            return circle_edit(username, circle ,db, False, False, True)
+        c.execute('INSERT INTO circle_members VALUES (?, ?)',t)
+        db.commit()
+        return circle_edit(username, circle ,db, False, True, False)
+    except sqlite3.OperationalError:
+        traceback.print_exc()
+    return circle_edit(username, circle ,db, False, False, False)#or F, F, T
+
+def circle_remove_f(username,name, circle ,db):
+    heldID=-1
+    test=-1
+    try:
+        c=db.cursor()
+        t=(circle,username,)
+        c.execute('SELECT cid FROM circles WHERE cname=? AND creator=?',t)
+        for row in c:
+            heldID=row[0]
+        if heldID==-1:
+            return circles_page_db(username, db, False, False)
+        t=(heldID, name)
+        c.execute('SELECT * FROM circle_members WHERE cid=? AND user=?',t)
+        for row in c:
+            test=1
+        if test==-1:
+            return circle_edit(username, circle ,db, False, False, False)
+        c.execute('DELETE FROM circle_members WHERE  cid=? AND user=?',t)
+        db.commit()
+        return circle_edit(username, circle ,db, True, False, False)
+    except sqlite3.OperationalError:
+        traceback.print_exc()
+    return circle_edit(username, circle ,db, False, False, False)#or F, F, T

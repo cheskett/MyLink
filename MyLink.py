@@ -7,7 +7,7 @@ from flask import g, render_template, request, session, send_from_directory, red
 from itsdangerous import BadSignature
 
 from tools.user_data import change_user_info, friends_data, unfriend, circles_page_db, circle_create, circle_edit, \
-    circle_remove
+    circle_remove, circle_add_f, circle_remove_f
 from tools.friends import request_friend
 from tools.login import get_serializer, user_exists, set_user_active
 from tools.login import login_post, register_user, check_password, change_password_db
@@ -210,7 +210,7 @@ def unfriend_event():
 def circles_page():
     if mysession.check_session() == 'passed':
         username = session['username']
-        return circles_page_db(username,g.db)
+        return circles_page_db(username,g.db, False, False)
     else:
         return render_template('login.html', bad_session=True)
 
@@ -228,7 +228,7 @@ def edit_c():
     if mysession.check_session() == 'passed':
         username = session['username']
         name = request.form["circle"]
-        return circle_edit(username, name ,g.db)
+        return circle_edit(username, name ,g.db, False, False, False)
     else:
         return render_template('login.html', bad_session=True)
 
@@ -238,6 +238,27 @@ def remove_c():
         username = session['username']
         name = request.form["circle"]
         return circle_remove(username,name ,g.db)
+    else:
+        return render_template('login.html', bad_session=True)
+
+@app.route('/Add_Friend', methods=['POST'])
+def add_f():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        name = request.form["name"]
+        circle = request.form["circle"]
+        #print("user:"+username+" name:"+name+" circle: "+ circle)
+        return circle_add_f(username,name, circle ,g.db)
+    else:
+        return render_template('login.html', bad_session=True)
+
+@app.route('/Remove_Friend', methods=['POST'])
+def remove_f():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        name = request.form["name"]
+        circle = request.form["circle"]
+        return circle_remove_f(username,name, circle ,g.db)
     else:
         return render_template('login.html', bad_session=True)
 
