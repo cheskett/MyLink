@@ -14,6 +14,7 @@
     <FORM METHOD=post ACTION="/Remove_Circle_Post">
         <input type="hidden" name="circle" value="{{circle.0}}">
         <input type="hidden" name="postid" value="{{postid}}">
+
         <div class="form-group">
             <label>{{circle.1}}</label>
             <button type="submit" class="btn btn-default">Remove Circle: {{circle.1}}</button>
@@ -21,25 +22,27 @@
     </FORM>
     {% endfor %}
     <hr>
-    <FORM METHOD=post ACTION="/Add_Circle_Post">
-        <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" name='friends' id="dropdownMenu1"
-                    data-toggle="dropdown"
-                    aria-expanded="true">
-                My Circles
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                {% for circle in circlesAll %}
-                <li>
+
+    <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" name='friends' id="dropdownMenu1"
+                data-toggle="dropdown"
+                aria-expanded="true">
+            My Circles
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            {% for circle in circlesAll %}
+            <li>
+                <FORM METHOD=post ACTION="/Add_Circle_Post">
                     <input type="hidden" name="circle" value="{{circle.0}}">
                     <input type="hidden" name="postid" value="{{postid}}">
                     <button type="submit" class="btn btn-default">{{circle.1}}</button>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-    </FORM>
+                </FORM>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
 
     {% if removed==True %}
     <h4 style="color: black">Circle Removed.</h4>

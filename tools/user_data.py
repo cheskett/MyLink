@@ -245,7 +245,7 @@ def friends_posts_home(username, db):
     try:
         c = db.cursor()
         t = (username,)
-        c.execute('SELECT postTitle, user, postText \
+        c.execute('SELECT DISTINCT postTitle, user, postText  \
                     FROM Posts p \
                     INNER JOIN postTarget pt on p.postid = pt.postid \
                     WHERE cid IN(SELECT cid From circle_members WHERE user=?)', t)

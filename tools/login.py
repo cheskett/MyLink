@@ -19,6 +19,10 @@ def register_user(user, passwd, pass2):
     c = g.db.cursor()
     is_valid = validate_email(user)
     if is_valid & (passwd == pass2):
+        tup = (user,)
+        c.execute('Select email from users WHERE email=?',tup)
+        for row in c:
+            return render_template('register.html', error='Username already exists')
         tup = (user, passwd, 'N')
         c.execute('INSERT INTO users (email, password, active) \
                                  VALUES (?,?,?)', tup)
@@ -72,7 +76,7 @@ def check_password(user, passwd, db):
         c = conn.cursor()
 
         t = (user,)
-        c.execute('SELECT * FROM users  WHERE email=?', t)
+        c.execute("SELECT * FROM users  WHERE email=? AND active='Y'", t)
 
         row = stored_password = c.fetchone()
         #conn.close()
