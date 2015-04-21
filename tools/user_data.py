@@ -222,11 +222,31 @@ def circle_remove_f(username,name, circle ,db):
 def your_posts_home(username,db):
     posts=[]
 
+    try:
+        c=db.cursor()
+        t=(username,)
+        c.execute('SELECT postTitle, user, postText FROM Posts WHERE user=?',t)
+        for row in c:
+            post = (row[0], row[1], row[2])
+            posts.append(post)
+        return render_template('your_posts_home.html',posts=posts)
+    except sqlite3.OperationalError:
+        traceback.print_exc()
     return render_template('your_posts_home.html',posts=posts)
 
 def friends_posts_home(username,db):
     posts=[]
-    
+    try:
+        c=db.cursor()
+        t=(username,)
+        c.execute('SELECT postTitle, user, postText FROM Posts WHERE postid= ANY(SELECT postid From postTarget \
+        WHERE cid= ANY( Select cid From circle_members WHERE user=?))',t)
+        for row in c:
+            post = (row[0], row[1], row[2])
+            posts.append(post)
+        return render_template('friends_posts_home.html', posts=posts)
+    except sqlite3.OperationalError:
+        traceback.print_exc()
     return render_template('friends_posts_home.html', posts=posts)
 
 def create_post_db(username,db):
