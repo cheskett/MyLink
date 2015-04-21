@@ -285,7 +285,7 @@ def remove_post_db(username,postid,db):
         traceback.print_exc()
     return your_posts_home(username, db)
 
-def edit_post_circles_db(username,postid,db):
+def edit_post_circles_db(username,postid,db, bool1, bool2):
     circlesAll=[]
     circlesActive=[]
     try:
@@ -302,7 +302,34 @@ def edit_post_circles_db(username,postid,db):
             circle = (row[0], row[1],)
             circlesAll.append(circle)
 
-        return render_template('post_circles_page.html', circlesAll=circlesAll, circlesActive=circlesActive)
+        return render_template('post_circles_page.html', circlesAll=circlesAll, circlesActive=circlesActive, postid=postid, removed=bool1, exists=bool2)
+    except sqlite3.OperationalError:
+        traceback.print_exc()
+    return your_posts_home(username, db)
+
+
+def r_post_circles_db(username,cid,postid,db):
+    try:
+        c = db.cursor()
+        t = (postid, cid,)
+        c.execute('DELETE FROM postTarget WHERE postid=? AND cid=?', t)
+        db.commit()
+        return edit_post_circles_db(username,postid,db, True, False)
+    except sqlite3.OperationalError:
+        traceback.print_exc()
+    return your_posts_home(username, db)
+
+def a_post_circles_db(username,cid,postid,db):
+    try:
+        c = db.cursor()
+        t = (postid, cid,)
+        #c.execute('DELETE FROM postTarget WHERE postid=? AND cid=?', t)
+        c.execute('Select cid FROM postTarget WHERE postid=? AND cid=?',t)
+        for row in c:
+            return edit_post_circles_db(username,postid,db, False, True)
+        c.execute('INSERT INTO postTarget (postid, cid) VALUES (?,?)', t)
+        db.commit()
+        return edit_post_circles_db(username,postid,db, False, False)
     except sqlite3.OperationalError:
         traceback.print_exc()
     return your_posts_home(username, db)

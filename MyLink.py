@@ -8,7 +8,7 @@ from itsdangerous import BadSignature
 
 from tools.user_data import change_user_info, friends_data, unfriend, circles_page_db, circle_create, circle_edit, \
     circle_remove, circle_add_f, circle_remove_f, friends_posts_home, your_posts_home, create_post_db, \
-    create_post_page_db, edit_post_circles_db, remove_post_db
+    create_post_page_db, edit_post_circles_db, remove_post_db, r_post_circles_db, a_post_circles_db
 from tools.friends import request_friend
 from tools.login import get_serializer, user_exists, set_user_active
 from tools.login import login_post, register_user, check_password, change_password_db
@@ -329,9 +329,30 @@ def edit_post_circles():
     if mysession.check_session() == 'passed':
         username = session['username']
         postid=request.form["postid"]
-        return edit_post_circles_db(username,postid,g.db)
+        return edit_post_circles_db(username,postid,g.db, False,False)
     else:
         return render_template('login.html', bad_session=True)
+
+@app.route('/Remove_Circle_Post', methods=['POST'])
+def remove_post_circles():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        cid=request.form["circle"]
+        postid=request.form["postid"]
+        return r_post_circles_db(username,cid,postid,g.db)
+    else:
+        return render_template('login.html', bad_session=True)
+
+@app.route('/Add_Circle_Post', methods=['POST'])
+def add_post_circles():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        cid=request.form["circle"]
+        postid=request.form["postid"]
+        return a_post_circles_db(username,cid,postid,g.db)
+    else:
+        return render_template('login.html', bad_session=True)
+
 
 # @app.route('/images/<filename>')
 # def uploaded_file(filename):
