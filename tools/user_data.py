@@ -234,6 +234,7 @@ def your_posts_home(username, db):
         for row in c.fetchall():
             post = (row[0], row[1], row[2], row[3])
             posts.append(post)
+        posts.reverse()
         return render_template('your_posts_home.html', posts=posts)
     except sqlite3.OperationalError:
         traceback.print_exc()
@@ -245,13 +246,14 @@ def friends_posts_home(username, db):
     try:
         c = db.cursor()
         t = (username,)
-        c.execute('SELECT postTitle, user, postText \
+        c.execute('SELECT DISTINCT postTitle, user, postText  \
                     FROM Posts p \
                     INNER JOIN postTarget pt on p.postid = pt.postid \
                     WHERE cid IN(SELECT cid From circle_members WHERE user=?)', t)
         for row in c.fetchall():
             post = (row[0], row[1], row[2])
             posts.append(post)
+        posts.reverse()
         return render_template('friends_posts_home.html', posts=posts)
     except sqlite3.OperationalError:
         traceback.print_exc()
