@@ -232,7 +232,9 @@ def your_posts_home(username, db):
         t = (username,)
         c.execute('SELECT postTitle, user, postText, postid FROM Posts WHERE user=?', t)
         for row in c.fetchall():
-            post = (row[0], row[1], row[2], row[3])
+            pictures = []
+            #search for pictures based on postid
+            post = (row[0], row[1], row[2], row[3], pictures)
             posts.append(post)
         posts.reverse()
         return render_template('your_posts_home.html', posts=posts)
@@ -245,13 +247,19 @@ def friends_posts_home(username, db):
     posts = []
     try:
         c = db.cursor()
+        d= db.cursor()
         t = (username,)
-        c.execute('SELECT DISTINCT postTitle, user, postText  \
+        c.execute('SELECT DISTINCT postTitle, user, postText, postid  \
                     FROM Posts p \
                     INNER JOIN postTarget pt on p.postid = pt.postid \
                     WHERE cid IN(SELECT cid From circle_members WHERE user=?)', t)
         for row in c.fetchall():
-            post = (row[0], row[1], row[2])
+            pictures = []
+            #search for pictures based on postid
+            t= (row[3],)
+            d.execute('SELECT owner, path From pictures pic INNER JOIN postpictures post on pic.picid=post.picid \
+            WHERE post.postid=?',t)
+            post = (row[0], row[1], row[2], pictures)
             posts.append(post)
         posts.reverse()
         return render_template('friends_posts_home.html', posts=posts)

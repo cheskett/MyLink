@@ -15,7 +15,8 @@
 
     <H3 style="display: inline">By: {{post.1}}</H3>
     <br>
-    {% for picture in pictures %}
+    {% for picture in post.4 %}
+        <img src="{{picture}}" alt="post_picture" style="width:300px;height:300px">
     {% endfor  %}
     <p1>{{post.2}}</p1>
     <br>
