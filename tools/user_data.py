@@ -230,9 +230,9 @@ def your_posts_home(username, db):
     try:
         c = db.cursor()
         t = (username,)
-        c.execute('SELECT postTitle, user, postText FROM Posts WHERE user=?', t)
+        c.execute('SELECT postTitle, user, postText, postid FROM Posts WHERE user=?', t)
         for row in c.fetchall():
-            post = (row[0], row[1], row[2])
+            post = (row[0], row[1], row[2], row[3])
             posts.append(post)
         return render_template('your_posts_home.html', posts=posts)
     except sqlite3.OperationalError:
@@ -258,5 +258,51 @@ def friends_posts_home(username, db):
     return render_template('friends_posts_home.html', posts=posts)
 
 
-def create_post_db(username, db):
-    return render_template('friends_posts_home.html')
+def create_post_page_db(username, db):
+    return render_template('post_create_page.html')
+
+def create_post_db(username,postTitle,postText, db):
+    try:
+        c = db.cursor()
+        t = (username, postTitle, postText,)
+        c.execute('INSERT into posts (user, postTitle, postText) VALUES (?,?,?)', t)
+        db.commit()
+        return your_posts_home(username, db)
+    except sqlite3.OperationalError:
+        traceback.print_exc()
+    return render_template('post_create_page.html')
+
+def remove_post_db(username,postid,db):
+    try:
+        c = db.cursor()
+        t = (postid,)
+        c.execute('Delete From postTarget WHERE postid=?', t)
+        c.execute('Delete From posts WHERE postid=?', t)
+        db.commit()
+
+        return your_posts_home(username, db)
+    except sqlite3.OperationalError:
+        traceback.print_exc()
+    return your_posts_home(username, db)
+
+def edit_post_circles_db(username,postid,db):
+    circlesAll=[]
+    circlesActive=[]
+    try:
+        c = db.cursor()
+        t = (postid,)
+        c.execute('SELECT c.cid, cname From postTarget p INNER JOIN circles c on p.cid = c.cid WHERE postid=?', t)
+        for row in c.fetchall():
+            circle = (row[0], row[1],)
+            circlesActive.append(circle)
+
+        t = (username,)
+        c.execute('SELECT cid, cname From circles WHERE creator=?', t)
+        for row in c.fetchall():
+            circle = (row[0], row[1],)
+            circlesAll.append(circle)
+
+        return render_template('post_circles_page.html', circlesAll=circlesAll, circlesActive=circlesActive)
+    except sqlite3.OperationalError:
+        traceback.print_exc()
+    return your_posts_home(username, db)

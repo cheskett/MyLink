@@ -7,7 +7,8 @@ from flask import g, render_template, request, session, send_from_directory, red
 from itsdangerous import BadSignature
 
 from tools.user_data import change_user_info, friends_data, unfriend, circles_page_db, circle_create, circle_edit, \
-    circle_remove, circle_add_f, circle_remove_f, friends_posts_home, your_posts_home, create_post_db
+    circle_remove, circle_add_f, circle_remove_f, friends_posts_home, your_posts_home, create_post_db, \
+    create_post_page_db, edit_post_circles_db, remove_post_db
 from tools.friends import request_friend
 from tools.login import get_serializer, user_exists, set_user_active
 from tools.login import login_post, register_user, check_password, change_password_db
@@ -296,14 +297,41 @@ def your_posts():
     else:
         return render_template('login.html', bad_session=True)
 
-@app.route('/Create_Post', methods=['GET'])
-def create_post():
+@app.route('/Create_Post_Page', methods=['GET'])
+def create_post_page():
     if mysession.check_session() == 'passed':
         username = session['username']
-        return create_post_db(username,g.db)
+        return create_post_page_db(username,g.db)
     else:
         return render_template('login.html', bad_session=True)
 
+@app.route('/Create_Post', methods=['POST'])
+def create_post():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        postTitle=request.form["postTitle"]
+        postText=request.form["postText"]
+        return create_post_db(username,postTitle,postText,g.db)
+    else:
+        return render_template('login.html', bad_session=True)
+
+@app.route('/Remove_Post', methods=['POST'])
+def remove_post():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        postid=request.form["postid"]
+        return remove_post_db(username,postid,g.db)
+    else:
+        return render_template('login.html', bad_session=True)
+
+@app.route('/Edit_Post_Circles', methods=['POST'])
+def edit_post_circles():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        postid=request.form["postid"]
+        return edit_post_circles_db(username,postid,g.db)
+    else:
+        return render_template('login.html', bad_session=True)
 
 # @app.route('/images/<filename>')
 # def uploaded_file(filename):

@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block title %}MyLink Create Post Page{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{%  block body %}
+
+<H2 style="text-align: center">MyLink-Create Post Page</H2>
+
+<div class="container">
+    <H3>Post Information:</H3>
+    <hr>
+    <FORM METHOD=post ACTION="/Create_Post">
+        <div class="form-group">
+            <label for="postTitle">Title:</label>
+            <INPUT TYPE=text NAME="postTitle">
+        </div>
+        <div class="form-group">
+            <label for="postText">Post Text:</label>
+            <TEXTAREA NAME=postText ROWS=1 COLS=25></TEXTAREA>
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+    </FORM>
+    <FORM METHOD=get ACTION="/return">
+        <button type="submit" class="btn btn-default">Return</button>
+    </FORM>
+</div>
+
+
+{%  endblock %}

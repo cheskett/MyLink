@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}MyLink Post's Circles Page{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block body %}
+
+<H2 style="text-align: center">MyLink-Assign a Post Circles Page</H2>
+
+<div class="container">
+    <H3>Active Circles:</H3>
+
+    {% for circle in circlesActive %}
+    <FORM METHOD=post ACTION="/Remove_Circle_Post">
+        <input type="hidden" name="circle" value="{{circle.0}}">
+
+        <div class="form-group">
+            <label>{{circle.1}}</label>
+            <button type="submit" class="btn btn-default">Remove Circle: {{circle.1}}</button>
+        </div>
+    </FORM>
+    {% endfor %}
+    <hr>
+    <FORM METHOD=post ACTION="/Add_Circle_Post">
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            {% for circle in circlesAll %}
+            <li>
+                <input type="hidden" name="circle" value="{{circle.0}}">
+                <button type="submit" class="btn btn-default">{{circle.1}}</button>
+            </li>
+            {% endfor %}
+        </ul>
+    </FORM>
+
+    {% if removed==True %}
+    <h4 style="color: red">Circle Removed.</h4>
+    {% endif %}
+    {% if exists==True %}
+    <h4 style="color: red">Circle Already Attached.</h4>
+    {% endif %}
+
+    <FORM METHOD=get ACTION="/return">
+        <button type="submit" class="btn btn-default">Return</button>
+    </FORM>
+</div>
+
+{% endblock %}
