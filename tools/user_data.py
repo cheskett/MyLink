@@ -353,3 +353,44 @@ def a_post_circles_db(username,cid,postid,db):
     except sqlite3.OperationalError:
         traceback.print_exc()
     return your_posts_home(username, db)
+
+def e_post_images(username, postid, db, added, removed, exists):
+    try:
+        #get images_used
+        #get_all_images
+        #post_images
+        return #NO Template
+    except sqlite3.OperationalError:
+        traceback.print_exc()
+    return your_posts_home(username, db)
+
+def a_post_images(username, postid, picid, db):
+    try:
+        c = db.cursor()
+        t = (postid, picid,)
+        c.execute('SELECT picid FROM postpictures WHERE postid=? AND picid=?',t)
+        for row in c:
+            return e_post_images(username, postid, db, False, False, True)
+        c.execute('INSERT INTO postpictures (postid, picid) VALUES (?,?) ',t)
+        db.commit()
+        return e_post_images(username, postid, db, True, False, False)
+    except sqlite3.OperationalError:
+        traceback.print_exc()
+    return your_posts_home(username, db)
+
+    #if exists (username, postid, db, False, False, True)
+    #if added (username, postid, db, True, False, False)
+    #return e_post_images
+def r_post_images(username, postid, picid, db):
+    try:
+        c = db.cursor()
+        t = (postid, picid,)
+        c.execute('DELETE FROM postpictures WHERE postid=? AND picid=?',t)
+        db.commit()
+        return e_post_images(username, postid, db, False, True, False)
+    except sqlite3.OperationalError:
+        traceback.print_exc()
+    return your_posts_home(username, db)
+    #if removed (username, postid, db, False, True, False)
+    #return e_post_images
+
