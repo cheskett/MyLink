@@ -229,10 +229,19 @@ def your_posts_home(username, db):
 
     try:
         c = db.cursor()
+        d = db.cursor()
         t = (username,)
         c.execute('SELECT postTitle, user, postText, postid FROM Posts WHERE user=?', t)
         for row in c.fetchall():
-            post = (row[0], row[1], row[2], row[3])
+            pictures = []
+            #search for pictures based on postid
+            t= (row[3],)
+            d.execute('SELECT owner, path From pictures pic INNER JOIN postpictures post on pic.picid=post.picid \
+            WHERE post.postid=?',t)
+            for stuff in d.fetchall():
+                pic= "/images/" + stuff[0] +"/"+ stuff[1]
+                pictures.append(pic)
+            post = (row[0], row[1], row[2], row[3], pictures)
             posts.append(post)
         posts.reverse()
         return render_template('your_posts_home.html', posts=posts)
@@ -245,13 +254,22 @@ def friends_posts_home(username, db):
     posts = []
     try:
         c = db.cursor()
+        d= db.cursor()
         t = (username,)
-        c.execute('SELECT DISTINCT postTitle, user, postText  \
+        c.execute('SELECT DISTINCT postTitle, user, postText, postid  \
                     FROM Posts p \
                     INNER JOIN postTarget pt on p.postid = pt.postid \
                     WHERE cid IN(SELECT cid From circle_members WHERE user=?)', t)
         for row in c.fetchall():
-            post = (row[0], row[1], row[2])
+            pictures = []
+            #search for pictures based on postid
+            t= (row[3],)
+            d.execute('SELECT owner, path From pictures pic INNER JOIN postpictures post on pic.picid=post.picid \
+            WHERE post.postid=?',t)
+            for stuff in d.fetchall():
+                pic= "/images/" + stuff[0] +"/"+ stuff[1]
+                pictures.append(pic)
+            post = (row[0], row[1], row[2], pictures)
             posts.append(post)
         posts.reverse()
         return render_template('friends_posts_home.html', posts=posts)
@@ -335,3 +353,44 @@ def a_post_circles_db(username,cid,postid,db):
     except sqlite3.OperationalError:
         traceback.print_exc()
     return your_posts_home(username, db)
+
+def e_post_images(username, postid, db, added, removed, exists):
+    try:
+        #get images_used
+        #get_all_images
+        #post_images
+        return #NO Template
+    except sqlite3.OperationalError:
+        traceback.print_exc()
+    return your_posts_home(username, db)
+
+def a_post_images(username, postid, picid, db):
+    try:
+        c = db.cursor()
+        t = (postid, picid,)
+        c.execute('SELECT picid FROM postpictures WHERE postid=? AND picid=?',t)
+        for row in c:
+            return e_post_images(username, postid, db, False, False, True)
+        c.execute('INSERT INTO postpictures (postid, picid) VALUES (?,?) ',t)
+        db.commit()
+        return e_post_images(username, postid, db, True, False, False)
+    except sqlite3.OperationalError:
+        traceback.print_exc()
+    return your_posts_home(username, db)
+
+    #if exists (username, postid, db, False, False, True)
+    #if added (username, postid, db, True, False, False)
+    #return e_post_images
+def r_post_images(username, postid, picid, db):
+    try:
+        c = db.cursor()
+        t = (postid, picid,)
+        c.execute('DELETE FROM postpictures WHERE postid=? AND picid=?',t)
+        db.commit()
+        return e_post_images(username, postid, db, False, True, False)
+    except sqlite3.OperationalError:
+        traceback.print_exc()
+    return your_posts_home(username, db)
+    #if removed (username, postid, db, False, True, False)
+    #return e_post_images
+

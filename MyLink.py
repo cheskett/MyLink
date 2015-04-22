@@ -8,7 +8,8 @@ from itsdangerous import BadSignature
 
 from tools.user_data import change_user_info, friends_data, unfriend, circles_page_db, circle_create, circle_edit, \
     circle_remove, circle_add_f, circle_remove_f, friends_posts_home, your_posts_home, create_post_db, \
-    create_post_page_db, edit_post_circles_db, remove_post_db, r_post_circles_db, a_post_circles_db
+    create_post_page_db, edit_post_circles_db, remove_post_db, r_post_circles_db, a_post_circles_db, e_post_images, \
+    a_post_images, r_post_images
 from tools.friends import request_friend
 from tools.login import get_serializer, user_exists, set_user_active
 from tools.login import login_post, register_user, check_password, change_password_db
@@ -364,6 +365,39 @@ def add_post_circles():
         return a_post_circles_db(username, cid, postid, g.db)
     else:
         return render_template('login.html', bad_session=True)
+
+@app.route('/Edit_Post_Images', methods=['GET'])
+def edit_post_images():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        postid = request.form["postid"]
+        return e_post_images(username, postid, g.db)
+    else:
+        return render_template('login.html', bad_session=True)
+
+
+@app.route('/Add_Post_Images', methods=['GET'])
+def add_post_images():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        postid = request.form["postid"]
+        picid = request.form["picid"]
+        return a_post_images(username, postid, picid, g.db)
+    else:
+        return render_template('login.html', bad_session=True)
+
+@app.route('/Remove_Post_Images', methods=['GET'])
+def remove_post_images():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        postid = request.form["postid"]
+        picid = request.form["picid"]
+        return r_post_images(username, postid, picid, g.db)
+    else:
+        return render_template('login.html', bad_session=True)
+
+
+
 
 
 # @app.route('/images/<filename>')
