@@ -229,11 +229,18 @@ def your_posts_home(username, db):
 
     try:
         c = db.cursor()
+        d = db.cursor()
         t = (username,)
         c.execute('SELECT postTitle, user, postText, postid FROM Posts WHERE user=?', t)
         for row in c.fetchall():
             pictures = []
             #search for pictures based on postid
+            t= (row[3],)
+            d.execute('SELECT owner, path From pictures pic INNER JOIN postpictures post on pic.picid=post.picid \
+            WHERE post.postid=?',t)
+            for stuff in d.fetchall():
+                pic= "/images/" + stuff[0] +"/"+ stuff[1]
+                pictures.append(pic)
             post = (row[0], row[1], row[2], row[3], pictures)
             posts.append(post)
         posts.reverse()
@@ -259,6 +266,9 @@ def friends_posts_home(username, db):
             t= (row[3],)
             d.execute('SELECT owner, path From pictures pic INNER JOIN postpictures post on pic.picid=post.picid \
             WHERE post.postid=?',t)
+            for stuff in d.fetchall():
+                pic= "/images/" + stuff[0] +"/"+ stuff[1]
+                pictures.append(pic)
             post = (row[0], row[1], row[2], pictures)
             posts.append(post)
         posts.reverse()
