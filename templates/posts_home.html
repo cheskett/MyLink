@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block title %}MyLink Home Page{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{%  block body %}
+
+<H2 style="text-align: center">MyLink-Home Page</H2>
+
+<div class="container">
+    <H3>Posts:</H3>
+    <hr>
+    {% for post in posts %}
+        <H2 style="display: inline">{{post.0}} </H2><H3 style="display: inline">By: {{post.1}}</H3>
+        <br>
+    {% for picture in post.3 %}
+        <img src="{{picture}}" alt="post_picture" style="width:300px;height:300px">
+    {% endfor  %}
+        <p1>{{post.2}}</p1>
+        <hr>
+    {% endfor %}
+
+    <FORM METHOD=get ACTION="/return">
+        <button type="submit" class="btn btn-default">Options</button>
+    </FORM>
+</div>
+
+
+{%  endblock %}

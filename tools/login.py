@@ -5,6 +5,7 @@ from itsdangerous import URLSafeSerializer
 from tools import mysession
 from tools import email
 import sqlite3
+from tools.home import home_page
 
 
 __author__ = 'Cameron'
@@ -121,7 +122,7 @@ def login_post(username, password, db):
         session["string"] = create_new_session(username)
         print(session["username"])
         print(session["string"])
-        return render_template("picture_options.html", user=username)
+        return home_page(username, db)
     else:
         return render_template("login.html",
                                login_failed='Yes')

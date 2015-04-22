@@ -5,6 +5,7 @@ import os
 from flask import Flask, abort, flash
 from flask import g, render_template, request, session, send_from_directory, redirect, url_for
 from itsdangerous import BadSignature
+from tools.home import home_page
 
 from tools.user_data import change_user_info, friends_data, unfriend, circles_page_db, circle_create, circle_edit, \
     circle_remove, circle_add_f, circle_remove_f, friends_posts_home, your_posts_home, create_post_db, \
@@ -396,7 +397,13 @@ def remove_post_images():
     else:
         return render_template('login.html', bad_session=True)
 
-
+@app.route('/Home_Page', methods=['GET'])
+def new_home_page():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        return home_page(username, g.db)
+    else:
+        return render_template('login.html', bad_session=True)
 
 
 
