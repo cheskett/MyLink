@@ -9,7 +9,7 @@ from itsdangerous import BadSignature
 from tools.user_data import change_user_info, friends_data, unfriend, circles_page_db, circle_create, circle_edit, \
     circle_remove, circle_add_f, circle_remove_f, friends_posts_home, your_posts_home, create_post_db, \
     create_post_page_db, edit_post_circles_db, remove_post_db, r_post_circles_db, a_post_circles_db, e_post_images, \
-    a_post_images, r_post_images
+    a_post_images, r_post_images, home_page
 from tools.friends import request_friend
 from tools.login import get_serializer, user_exists, set_user_active
 from tools.login import login_post, register_user, check_password, change_password_db
@@ -396,7 +396,13 @@ def remove_post_images():
     else:
         return render_template('login.html', bad_session=True)
 
-
+@app.route('/Home_Page', methods=['GET'])
+def new_home_page():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        return home_page(username, g.db)
+    else:
+        return render_template('login.html', bad_session=True)
 
 
 

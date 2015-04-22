@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}MyLink Friends{% endblock %}
+{% block title %}MyLink Upload{% endblock %}
 {% block head %}
     {{ super() }}
 {% endblock %}
@@ -8,5 +8,10 @@
     <H2>The picture {{ filename }} was uploaded successfully</H2>
     <br>
     <img src="images/{{ session['username'] }}/{{ filename }}">
+
+    <br>
+    <FORM METHOD=get ACTION="/upload">
+        <button type="submit" class="btn btn-default">Return</button>
+    </FORM>
 
 {% endblock %}
