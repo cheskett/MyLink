@@ -69,13 +69,13 @@
 
     <br>
 
-    <div id="upload_image" class="container" style="display: none">
+    <div id="upload_image" class="container-fluid" style="display: none">
         <h3 class="modal-title">Upload Image </h3>
 
         <form name="upload" ACTION="/upload" METHOD="POST" enctype=multipart/form-data>
             <input type="hidden" name="action" value="upload-pic-data">
             <BR>
-            <I>Browse Picture:</I> <input class="btn btn-default" TYPE="file" NAME="file">
+            <I>Browse Picture:</I> <input class="form-control-static" TYPE="file" NAME="file">
             <br>
             <label for="album_select">Select Album: </label>
 

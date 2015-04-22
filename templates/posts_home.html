@@ -11,7 +11,9 @@
     <H3>Posts:</H3>
     <hr>
     {% for post in posts %}
+        <div style="border-radius: 3px" class="container z-depth-1 white">
         <H2 style="display: inline">{{post.0}} </H2><H3 style="display: inline">By: {{post.1}}</H3>
+        </div>
         <br>
     {% for picture in post.3 %}
         <img src="{{picture}}" alt="post_picture" style="width:300px;height:300px">
