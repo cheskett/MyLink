@@ -74,8 +74,15 @@
 
         <form name="upload" ACTION="/upload" METHOD="POST" enctype=multipart/form-data>
             <input type="hidden" name="action" value="upload-pic-data">
-            <BR>
-            <I>Browse Picture:</I> <input class="form-control-static" TYPE="file" NAME="file">
+
+            <label for="album_select">Select File: </label>
+            <div class="file-field input-field">
+                <input class="file-path validate" type="text" style="width: 70%"/>
+                <div class="btn">
+                    <span>File</span>
+                    <input type="file" name="file"/>
+                </div>
+            </div>
             <br>
             <label for="album_select">Select Album: </label>
 

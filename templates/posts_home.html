@@ -3,29 +3,30 @@
 {% block head %}
     {{ super() }}
 {% endblock %}
-{%  block body %}
+{% block body %}
 
-<H2 style="text-align: center">MyLink-Home Page</H2>
+    <H2 style="text-align: center">MyLink Home</H2>
 
-<div class="container">
+
+    <ul class="">
     <H3>Posts:</H3>
-    <hr>
-    {% for post in posts %}
-        <div style="border-radius: 3px" class="container z-depth-1 white">
-        <H2 style="display: inline">{{post.0}} </H2><H3 style="display: inline">By: {{post.1}}</H3>
-        </div>
-        <br>
-    {% for picture in post.3 %}
-        <img src="{{picture}}" alt="post_picture" style="width:300px;height:300px">
-    {% endfor  %}
-        <p1>{{post.2}}</p1>
-        <hr>
-    {% endfor %}
+        {% for post in posts %}
+            <div style="border-radius: 3px" class="z-depth-1 white">
+                <H3 style="display: inline">{{ post.0 }} </H3>
 
-    <FORM METHOD=get ACTION="/return">
-        <button type="submit" class="btn btn-default">Options</button>
-    </FORM>
-</div>
+                <H5 style="display: inline; text-align: right">By: {{ post.1 }}</H5>
+                <br>
+                {% for picture in post.3 %}
+                    <img src="{{ picture }}" alt="post_picture" style="width:300px;height:300px">
+                {% endfor %}
+                <p1>{{ post.2 }}</p1>
+            </div>
+            <br>
+        {% endfor %}
+    </ul>
 
 
-{%  endblock %}
+
+
+
+{% endblock %}
