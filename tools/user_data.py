@@ -17,28 +17,28 @@ def change_user_info(username, form, db):
     home = form['home']
     phone = form['phone']
 
-    if age:
+    if age != "":
         print('change age: ' + age)
         change_col_db(username, "age", age, db)
-    if date:
+    if date != "":
         print('change date: ' + date)
         change_col_db(username, "date", date, db)
-    if relationship:
+    if relationship != "":
         print('change relationship: ' + relationship)
         change_col_db(username, "relationship", relationship, db)
-    if occupation:
+    if occupation != "":
         print('change occupation: ' + occupation)
         change_col_db(username, "occupation", occupation, db)
-    if education:
+    if education !="":
         print('change education: ' + education)
         change_col_db(username, "education", education, db)
-    if desc:
+    if desc != "":
         print('change desc: ' + desc)
         change_col_db(username, "desc", desc, db)
-    if home:
+    if home != "":
         print('change home: ' + home)
         change_col_db(username, "home", home, db)
-    if phone:
+    if phone !="":
         print('change phone: ' + phone)
         change_col_db(username, "phone", phone, db)
 
