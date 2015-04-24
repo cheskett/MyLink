@@ -6,11 +6,12 @@ from flask import Flask, abort, flash
 from flask import g, render_template, request, session, send_from_directory, redirect, url_for
 from itsdangerous import BadSignature
 from tools.home import home_page
+from tools.needed import e_post_images, a_post_images, r_post_images, get_data
 
 from tools.user_data import change_user_info, friends_data, unfriend, circles_page_db, circle_create, circle_edit, \
     circle_remove, circle_add_f, circle_remove_f, friends_posts_home, your_posts_home, create_post_db, \
-    create_post_page_db, edit_post_circles_db, remove_post_db, r_post_circles_db, a_post_circles_db, e_post_images, \
-    a_post_images, r_post_images
+    create_post_page_db, edit_post_circles_db, remove_post_db, r_post_circles_db, a_post_circles_db, \
+      change_info_get
 from tools.friends import request_friend
 from tools.login import get_serializer, user_exists, set_user_active
 from tools.login import login_post, register_user, check_password, change_password_db
@@ -168,7 +169,8 @@ def change_password():
 @app.route('/Change_User_Info_Page', methods=['POST', 'GET'])
 def change_info_page():
     if mysession.check_session() == 'passed':
-        return render_template('change_user_info_page.html');
+        username = session['username']
+        return change_info_get(username, g.db)
     else:
         return render_template('login.html', bad_session=False)
 
@@ -405,6 +407,13 @@ def new_home_page():
     else:
         return render_template('login.html', bad_session=True)
 
+@app.route('/user/<user>')
+def user_data_get(user):
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        return get_data(username,user, g.db)
+    else:
+        return render_template('login.html', bad_session=True)
 
 
 # @app.route('/images/<filename>')

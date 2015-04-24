@@ -13,7 +13,7 @@
     {% for post in posts %}
     <H2 style="display: inline">{{post.0}} </H2>
 
-    <H3 style="display: inline">By: {{post.1}}</H3>
+    <H3 style="display: inline"><a href="user/{{post.1}}">By: {{post.1}}</a></H3>
     <br>
     {% for picture in post.4 %}
         <img src="{{picture}}" alt="post_picture" style="width:300px;height:300px">

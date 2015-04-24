@@ -18,28 +18,28 @@ def change_user_info(username, form, db):
     home = form['home']
     phone = form['phone']
 
-    if age != "":
+    if age:
         print('change age: ' + age)
         change_col_db(username, "age", age, db)
-    if date != "":
+    if date:
         print('change date: ' + date)
         change_col_db(username, "date", date, db)
-    if relationship != "":
+    if relationship:
         print('change relationship: ' + relationship)
         change_col_db(username, "relationship", relationship, db)
-    if occupation != "":
+    if occupation:
         print('change occupation: ' + occupation)
         change_col_db(username, "occupation", occupation, db)
-    if education !="":
+    if education:
         print('change education: ' + education)
         change_col_db(username, "education", education, db)
-    if desc != "":
+    if desc:
         print('change desc: ' + desc)
         change_col_db(username, "desc", desc, db)
-    if home != "":
+    if home:
         print('change home: ' + home)
         change_col_db(username, "home", home, db)
-    if phone !="":
+    if phone:
         print('change phone: ' + phone)
         change_col_db(username, "phone", phone, db)
 
@@ -353,7 +353,7 @@ def a_post_circles_db(username, cid, postid, db):
         t = (postid, cid,)
         # c.execute('DELETE FROM postTarget WHERE postid=? AND cid=?', t)
         c.execute('Select cid FROM postTarget WHERE postid=? AND cid=?', t)
-        for row in c:
+        for row in c.fetchall():
             return edit_post_circles_db(username, postid, db, False, True)
         c.execute('INSERT INTO postTarget (postid, cid) VALUES (?,?)', t)
         db.commit()
@@ -362,47 +362,15 @@ def a_post_circles_db(username, cid, postid, db):
         traceback.print_exc()
     return your_posts_home(username, db)
 
-
-def e_post_images(username, postid, db, added, removed, exists):
-    try:
-        # get images_used
-        #get_all_images
-        #post_images
-        return  #NO Template
-    except sqlite3.OperationalError:
-        traceback.print_exc()
-    return your_posts_home(username, db)
-
-
-def a_post_images(username, postid, picid, db):
+def change_info_get(username, db):
+    info=()
     try:
         c = db.cursor()
-        t = (postid, picid,)
-        c.execute('SELECT picid FROM postpictures WHERE postid=? AND picid=?', t)
-        for row in c:
-            return e_post_images(username, postid, db, False, False, True)
-        c.execute('INSERT INTO postpictures (postid, picid) VALUES (?,?) ', t)
-        db.commit()
-        return e_post_images(username, postid, db, True, False, False)
+        t = (username,)
+        c.execute('SELECT age, date, relationship, occupation, education, home, phone, desc FROM users WHERE email=?', t)
+        for row in c.fetchall():
+            info = info + row
+        return render_template('change_user_info_page.html', info=info)
     except sqlite3.OperationalError:
         traceback.print_exc()
-    return your_posts_home(username, db)
-
-    # if exists (username, postid, db, False, False, True)
-    #if added (username, postid, db, True, False, False)
-    #return e_post_images
-
-
-def r_post_images(username, postid, picid, db):
-    try:
-        c = db.cursor()
-        t = (postid, picid,)
-        c.execute('DELETE FROM postpictures WHERE postid=? AND picid=?', t)
-        db.commit()
-        return e_post_images(username, postid, db, False, True, False)
-    except sqlite3.OperationalError:
-        traceback.print_exc()
-    return your_posts_home(username, db)
-    # if removed (username, postid, db, False, True, False)
-    #return
-
+    return render_template('change_user_info_page.html', info=info)

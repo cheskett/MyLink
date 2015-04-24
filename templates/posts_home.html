@@ -14,7 +14,7 @@
             <div style="border-radius: 3px" class="z-depth-1 white">
                 <H3 style="display: inline">{{ post.0 }} </H3>
 
-                <H5 style="display: inline; text-align: right">By: {{ post.1 }}</H5>
+                <H5 style="display: inline; text-align: right"><a href="user/{{post.1}}">By: {{ post.1 }}</a></H5>
                 <br>
                 {% for picture in post.3 %}
                     <img src="{{ picture }}" alt="post_picture" style="width:300px;height:300px">

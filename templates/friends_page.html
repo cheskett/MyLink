@@ -15,7 +15,7 @@
     <FORM METHOD=post ACTION="/Unfriend">
         <input type="hidden" name="other" value="{{friend}}">
         <div class="form-group">
-            <label for={{friend}}>{{friend}}</label>
+            <label for={{friend}}><a href="user/{{friend}}">{{friend}}</a></label>
             <button name={{friend}} type="submit" class="btn btn-default">Unfriend {{friend}}</button>
         </div>
     </FORM>
@@ -28,7 +28,7 @@
     {% for request in requested %}
     <FORM METHOD=post ACTION="/Unfriend">
         <input type="hidden" name="other" value="{{request}}">
-        <div class="form-group"><label for="{{request}}">{{request}}</label>
+        <div class="form-group"><label for="{{request}}"><a href="user/{{request}}">{{request}}</a></label>
             <button name={{request}} type="submit" class="btn btn-default">Unfriend {{request}}</button>
         </div>
     </FORM>
@@ -42,7 +42,7 @@
     <FORM METHOD=post ACTION="/Unfriend">
         <input type="hidden" name="other" value="{{request}}">
         <input type="hidden" name="request" value="{{request}}">
-        <div class="form-group"><label for="{{request}}">{{request}}</label>
+        <div class="form-group"><label for="{{request}}"><a href="user/{{request}}">{{request}}</a></label>
             <button name={{request}} formaction="/Friend_Request_Sent" type="submit" class="btn btn-default">Accept Request from {{request}}</button>
             <button name={{request}}o type="submit" class="btn btn-default">Deny Request from {{request}}</button>
         </div>

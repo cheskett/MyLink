@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block title %}MyLink Friends' Posts Page{% endblock %}
 {% block head %}
-    {{ super() }}
+{{ super() }}
 {% endblock %}
 {%  block body %}
 
@@ -11,17 +11,19 @@
     <H3>Friends' Posts:</H3>
     <hr>
     {% for post in posts %}
-        <div style="border-radius: 3px" class="container z-depth-1 white">
-        <H2 style="display: inline">{{post.0}} </H2><H3 style="display: inline">By: {{post.1}}</H3>
-        </div>
-        <br>
+    <div style="border-radius: 3px" class="container z-depth-1 white">
+        <H2 style="display: inline">{{post.0}}</H2>
+
+        <H3 style="display: inline"><a href="user/{{post.1}}">By: {{post.1}}</a></H3>
+    </div>
+    <br>
     {% for picture in post.3 %}
 
-        <img src="{{picture}}" alt="post_picture" style="width:300px;height:300px">
+    <img src="{{picture}}" alt="post_picture" style="width:300px;height:300px">
 
-    {% endfor  %}
-        <p1>{{post.2}}</p1>
-        <hr>
+    {% endfor %}
+    <p1>{{post.2}}</p1>
+    <hr>
     {% endfor %}
 
     <FORM METHOD=get ACTION="/return">
