@@ -3,6 +3,7 @@ import html
 import traceback
 from tools.login import change_col_db
 from flask import Flask, render_template, session, g, current_app as app, url_for
+from tools import pictures
 
 __author__ = 'Shade390'
 
@@ -59,7 +60,7 @@ def friends_data(username, db, bool):
             friends.append(row[0])
 
 
-        #requests to you
+        # requests to you
         c.execute('SELECT user1 FROM friends WHERE user2=? AND status=0', t)
         for row in c:
             requests.append(row[0])
@@ -135,7 +136,7 @@ def circle_edit(username, name, db, removed, added, exists):
         c.execute('SELECT user From circle_members WHERE cid=?', t)
         # print(c)
         for row in c:
-            #print(row)
+            # print(row)
             friendsc.append(row[0])
 
         t = (username,)
@@ -234,12 +235,12 @@ def your_posts_home(username, db):
         c.execute('SELECT postTitle, user, postText, postid FROM Posts WHERE user=?', t)
         for row in c.fetchall():
             pictures = []
-            #search for pictures based on postid
-            t= (row[3],)
+            # search for pictures based on postid
+            t = (row[3],)
             d.execute('SELECT owner, path From pictures pic INNER JOIN postpictures post on pic.picid=post.picid \
-            WHERE post.postid=?',t)
+            WHERE post.postid=?', t)
             for stuff in d.fetchall():
-                pic= "/images/" + stuff[0] +"/"+ stuff[1]
+                pic = "/images/" + stuff[0] + "/" + stuff[1]
                 pictures.append(pic)
             post = (row[0], row[1], row[2], row[3], pictures)
             posts.append(post)
@@ -254,7 +255,7 @@ def friends_posts_home(username, db):
     posts = []
     try:
         c = db.cursor()
-        d= db.cursor()
+        d = db.cursor()
         t = (username,)
         c.execute('SELECT DISTINCT postTitle, user, postText, p.postid  \
                     FROM Posts p \
@@ -262,12 +263,12 @@ def friends_posts_home(username, db):
                     WHERE cid IN(SELECT cid From circle_members WHERE user=?)', t)
         for row in c.fetchall():
             pictures = []
-            #search for pictures based on postid
-            t= (row[3],)
+            # search for pictures based on postid
+            t = (row[3],)
             d.execute('SELECT owner, path From pictures pic INNER JOIN postpictures post on pic.picid=post.picid \
-            WHERE post.postid=?',t)
+            WHERE post.postid=?', t)
             for stuff in d.fetchall():
-                pic= "/images/" + stuff[0] +"/"+ stuff[1]
+                pic = "/images/" + stuff[0] + "/" + stuff[1]
                 pictures.append(pic)
             post = (row[0], row[1], row[2], pictures)
             posts.append(post)
@@ -279,9 +280,12 @@ def friends_posts_home(username, db):
 
 
 def create_post_page_db(username, db):
-    return render_template('post_create_page.html')
+    album = pictures.get_first_user_album()
+    pics = pictures.get_pictures(session['username'], album)
+    return render_template('post_create_page.html', pictures=pics)
 
-def create_post_db(username,postTitle,postText, db):
+
+def create_post_db(username, postTitle, postText, db):
     try:
         c = db.cursor()
         t = (username, postTitle, postText,)
@@ -292,7 +296,8 @@ def create_post_db(username,postTitle,postText, db):
         traceback.print_exc()
     return render_template('post_create_page.html')
 
-def remove_post_db(username,postid,db):
+
+def remove_post_db(username, postid, db):
     try:
         c = db.cursor()
         t = (postid,)
@@ -305,9 +310,10 @@ def remove_post_db(username,postid,db):
         traceback.print_exc()
     return your_posts_home(username, db)
 
-def edit_post_circles_db(username,postid,db, bool1, bool2):
-    circlesAll=[]
-    circlesActive=[]
+
+def edit_post_circles_db(username, postid, db, bool1, bool2):
+    circlesAll = []
+    circlesActive = []
     try:
         c = db.cursor()
         t = (postid,)
@@ -322,75 +328,81 @@ def edit_post_circles_db(username,postid,db, bool1, bool2):
             circle = (row[0], row[1],)
             circlesAll.append(circle)
 
-        return render_template('post_circles_page.html', circlesAll=circlesAll, circlesActive=circlesActive, postid=postid, removed=bool1, exists=bool2)
+        return render_template('post_circles_page.html', circlesAll=circlesAll, circlesActive=circlesActive,
+                               postid=postid, removed=bool1, exists=bool2)
     except sqlite3.OperationalError:
         traceback.print_exc()
     return your_posts_home(username, db)
 
 
-def r_post_circles_db(username,cid,postid,db):
+def r_post_circles_db(username, cid, postid, db):
     try:
         c = db.cursor()
         t = (postid, cid,)
         c.execute('DELETE FROM postTarget WHERE postid=? AND cid=?', t)
         db.commit()
-        return edit_post_circles_db(username,postid,db, True, False)
+        return edit_post_circles_db(username, postid, db, True, False)
     except sqlite3.OperationalError:
         traceback.print_exc()
     return your_posts_home(username, db)
 
-def a_post_circles_db(username,cid,postid,db):
+
+def a_post_circles_db(username, cid, postid, db):
     try:
         c = db.cursor()
         t = (postid, cid,)
-        #c.execute('DELETE FROM postTarget WHERE postid=? AND cid=?', t)
-        c.execute('Select cid FROM postTarget WHERE postid=? AND cid=?',t)
+        # c.execute('DELETE FROM postTarget WHERE postid=? AND cid=?', t)
+        c.execute('Select cid FROM postTarget WHERE postid=? AND cid=?', t)
         for row in c:
-            return edit_post_circles_db(username,postid,db, False, True)
+            return edit_post_circles_db(username, postid, db, False, True)
         c.execute('INSERT INTO postTarget (postid, cid) VALUES (?,?)', t)
         db.commit()
-        return edit_post_circles_db(username,postid,db, False, False)
+        return edit_post_circles_db(username, postid, db, False, False)
     except sqlite3.OperationalError:
         traceback.print_exc()
     return your_posts_home(username, db)
 
+
 def e_post_images(username, postid, db, added, removed, exists):
     try:
-        #get images_used
+        # get images_used
         #get_all_images
         #post_images
-        return #NO Template
+        return  #NO Template
     except sqlite3.OperationalError:
         traceback.print_exc()
     return your_posts_home(username, db)
+
 
 def a_post_images(username, postid, picid, db):
     try:
         c = db.cursor()
         t = (postid, picid,)
-        c.execute('SELECT picid FROM postpictures WHERE postid=? AND picid=?',t)
+        c.execute('SELECT picid FROM postpictures WHERE postid=? AND picid=?', t)
         for row in c:
             return e_post_images(username, postid, db, False, False, True)
-        c.execute('INSERT INTO postpictures (postid, picid) VALUES (?,?) ',t)
+        c.execute('INSERT INTO postpictures (postid, picid) VALUES (?,?) ', t)
         db.commit()
         return e_post_images(username, postid, db, True, False, False)
     except sqlite3.OperationalError:
         traceback.print_exc()
     return your_posts_home(username, db)
 
-    #if exists (username, postid, db, False, False, True)
+    # if exists (username, postid, db, False, False, True)
     #if added (username, postid, db, True, False, False)
     #return e_post_images
+
+
 def r_post_images(username, postid, picid, db):
     try:
         c = db.cursor()
         t = (postid, picid,)
-        c.execute('DELETE FROM postpictures WHERE postid=? AND picid=?',t)
+        c.execute('DELETE FROM postpictures WHERE postid=? AND picid=?', t)
         db.commit()
         return e_post_images(username, postid, db, False, True, False)
     except sqlite3.OperationalError:
         traceback.print_exc()
     return your_posts_home(username, db)
-    #if removed (username, postid, db, False, True, False)
+    # if removed (username, postid, db, False, True, False)
     #return
 

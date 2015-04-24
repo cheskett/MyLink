@@ -3,29 +3,53 @@
 {% block head %}
     {{ super() }}
 {% endblock %}
-{%  block body %}
+{% block body %}
+    <link rel="stylesheet" href="/static/css/image-picker.css">
+    <script src="/static/scripts/image-picker.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#get_picture").click(function () {
+                $("#add_picture").fadeIn();
+                $("select").imagepicker()
+            });
+        });
+    </script>
 
-<H2 style="text-align: center">Create New Post</H2>
+    <H2 style="text-align: center">Create New Post</H2>
 
-<div class="container">
-    <H3>Post Information:</H3>
-    <hr>
-    <FORM METHOD=post ACTION="/Create_Post">
-        <div class="form-group">
-            <label for="postTitle">Title:</label>
-            <INPUT TYPE=text NAME="postTitle">
-        </div>
-        <div class="form-group">
-            <label for="postText">Post Text:</label>
-            <TEXTAREA NAME=postText ROWS=1 COLS=25></TEXTAREA>
-        </div>
-        <button type="submit" class="btn btn-default">Submit</button>
-    </FORM>
-    <br>
-    <FORM METHOD=get ACTION="/return">
-        <button type="submit" class="btn btn-default">Return</button>
-    </FORM>
-</div>
+    <div class="container">
+        <H3>Post Information:</H3>
+        <hr>
+        <FORM METHOD=post ACTION="/Create_Post">
+            <div class="form-group">
+                <label for="postTitle">Title:</label>
+                <INPUT TYPE=text NAME="postTitle">
+            </div>
+            <div class="form-group">
+                <label for="postText">Post Text:</label>
+                <TEXTAREA NAME=postText ROWS=1 COLS=25></TEXTAREA>
+            </div>
+            <div id="add_picture" class="container-fluid" style="display: none">
+                <select multiple="multiple" class="image-picker" >
+                    {% for image in pictures %}
+                        <option data-img-src="images/{{ session['username'] }}/{{ image['path'] }}"></option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+        </FORM>
+        <br>
+
+        <button class="btn btn-default" id="get_picture">Add Picture</button>
+        <br>
+
+        <FORM METHOD=get ACTION="/return">
+            <button type="submit" class="btn btn-default">Return</button>
+        </FORM>
+    </div>
+
+<script>$("select").imagepicker()</script>
 
 
-{%  endblock %}
+
+{% endblock %}

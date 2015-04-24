@@ -13,7 +13,8 @@ def home_page(username, db):
         c.execute('SELECT DISTINCT postTitle, user, postText, p.postid  \
                     FROM Posts p \
                     INNER JOIN postTarget pt on p.postid = pt.postid \
-                    WHERE (cid IN(SELECT cid From circle_members WHERE user=?)) OR (user=?)', t)
+                    OR p.user = ? \
+                    WHERE (cid IN(SELECT cid From circle_members WHERE user=?))', t)
         for row in c.fetchall():
             pictures = []
             #search for pictures based on postid

@@ -55,6 +55,16 @@ def get_pictures(user, album):
     return pictures
 
 
+def get_first_user_album():
+    t = (session['username'],)
+    c = g.db.cursor()
+    sql = "SELECT name FROM albums WHERE owner = ?"
+    c.execute(sql, t)
+    album = c.fetchone()
+    album = album[0]
+    return album
+
+
 def create_album(form):
     privacy = form['privacy']
     title = form['title']
