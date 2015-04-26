@@ -51,7 +51,7 @@
                         {% endfor %}
                     </ul>
                 </div>
-                <select name = "pictures" multiple="multiple" class="image-picker masonry">
+                <select name="pictures" multiple="multiple" class="image-picker masonry">
                     {% for image in pictures %}
                         <option data-img-src="images/{{ session['username'] }}/{{ image['path'] }}" value="{{ image['picid'] }}"></option>
                     {% endfor %}
@@ -60,6 +60,7 @@
             <button type="submit" class="btn btn-default">Submit</button>
         </FORM>
 
+    <br>
 
         <FORM METHOD=get ACTION="/return">
             <button type="submit" class="btn btn-default">Return</button>
@@ -67,7 +68,6 @@
     </div>
 
     <script>$("select").imagepicker()</script>
-    <script src="/static/scripts/masonry.pkgd.min.js"></script>
 
 
 
