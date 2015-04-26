@@ -279,10 +279,12 @@ def friends_posts_home(username, db):
     return render_template('friends_posts_home.html', posts=posts)
 
 
-def create_post_page_db(username, db):
-    album = pictures.get_first_user_album()
+def create_post_page_db(username, db, album=None):
+    if album is None:
+        album = pictures.get_first_user_album()
+    albums = pictures.get_albums()
     pics = pictures.get_pictures(session['username'], album)
-    return render_template('post_create_page.html', pictures=pics)
+    return render_template('post_create_page.html', pictures=pics, albums=albums)
 
 
 def create_post_db(username, postTitle, postText, db):

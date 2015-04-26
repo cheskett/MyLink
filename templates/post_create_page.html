@@ -29,26 +29,45 @@
                 <label for="postText">Post Text:</label>
                 <TEXTAREA NAME=postText ROWS=1 COLS=25></TEXTAREA>
             </div>
-            <div id="add_picture" class="container-fluid" style="display: none">
-                <select multiple="multiple" class="image-picker" >
+<br>
+
+        <button type="button" class="btn btn-default" id="get_picture">Add Picture</button>
+        <br>
+        <br>
+
+         <div id="add_picture" class="container-fluid" style="display: none">
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" name='albums' id="dropdownMenu1"
+                            data-toggle="dropdown"
+                            aria-expanded="true">
+                        My Albums
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                        {% for album in albums %}
+                            <input type="hidden" name="hid_album" value="{{ album['name'] }}">
+                            <li><a role="menuitem" tabindex="-1"  href="{{ url_for( 'create_post_page', album=album['name']) }}"
+                                  >{{ album['name'] }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <select name = "pictures" multiple="multiple" class="image-picker masonry">
                     {% for image in pictures %}
-                        <option data-img-src="images/{{ session['username'] }}/{{ image['path'] }}"></option>
+                        <option data-img-src="images/{{ session['username'] }}/{{ image['path'] }}" value="{{ image['picid'] }}"></option>
                     {% endfor %}
                 </select>
             </div>
             <button type="submit" class="btn btn-default">Submit</button>
         </FORM>
-        <br>
 
-        <button class="btn btn-default" id="get_picture">Add Picture</button>
-        <br>
 
         <FORM METHOD=get ACTION="/return">
             <button type="submit" class="btn btn-default">Return</button>
         </FORM>
     </div>
 
-<script>$("select").imagepicker()</script>
+    <script>$("select").imagepicker()</script>
+    <script src="/static/scripts/masonry.pkgd.min.js"></script>
 
 
 

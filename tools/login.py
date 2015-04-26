@@ -120,8 +120,8 @@ def login_post(username, password, db):
         # session = create_new_session(username)
         session["username"] = username
         session["string"] = create_new_session(username)
-        print(session["username"])
-        print(session["string"])
+        #print(session["username"])
+        #print(session["string"])
         return home_page(username, db)
     else:
         return render_template("login.html",

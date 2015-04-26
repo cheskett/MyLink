@@ -11,7 +11,7 @@ from tools.needed import e_post_images, a_post_images, r_post_images, get_data
 from tools.user_data import change_user_info, friends_data, unfriend, circles_page_db, circle_create, circle_edit, \
     circle_remove, circle_add_f, circle_remove_f, friends_posts_home, your_posts_home, create_post_db, \
     create_post_page_db, edit_post_circles_db, remove_post_db, r_post_circles_db, a_post_circles_db, \
-      change_info_get
+    change_info_get
 from tools.friends import request_friend
 from tools.login import get_serializer, user_exists, set_user_active
 from tools.login import login_post, register_user, check_password, change_password_db
@@ -312,7 +312,11 @@ def your_posts():
 def create_post_page():
     if mysession.check_session() == 'passed':
         username = session['username']
-        return create_post_page_db(username, g.db)
+        if not request.args.get("album"):
+            return create_post_page_db(username, g.db)
+        else:
+            album = request.args.get("album")
+            return create_post_page_db(username, g.db, album)
     else:
         return render_template('login.html', bad_session=True)
 
@@ -323,7 +327,12 @@ def create_post():
         username = session['username']
         postTitle = request.form["postTitle"]
         postText = request.form["postText"]
-        return create_post_db(username, postTitle, postText, g.db)
+        list = request.form["pictures"]
+        if list:
+            print(list)
+            return create_post_db(username, postTitle, postText, g.db)
+        else:
+            return create_post_db(username, postTitle, postText, g.db)
     else:
         return render_template('login.html', bad_session=True)
 
@@ -369,6 +378,7 @@ def add_post_circles():
     else:
         return render_template('login.html', bad_session=True)
 
+
 @app.route('/Edit_Post_Images', methods=['GET'])
 def edit_post_images():
     if mysession.check_session() == 'passed':
@@ -389,6 +399,7 @@ def add_post_images():
     else:
         return render_template('login.html', bad_session=True)
 
+
 @app.route('/Remove_Post_Images', methods=['GET'])
 def remove_post_images():
     if mysession.check_session() == 'passed':
@@ -399,6 +410,7 @@ def remove_post_images():
     else:
         return render_template('login.html', bad_session=True)
 
+
 @app.route('/Home_Page', methods=['GET'])
 def new_home_page():
     if mysession.check_session() == 'passed':
@@ -407,11 +419,12 @@ def new_home_page():
     else:
         return render_template('login.html', bad_session=True)
 
+
 @app.route('/user/<user>')
 def user_data_get(user):
     if mysession.check_session() == 'passed':
         username = session['username']
-        return get_data(username,user, g.db)
+        return get_data(username, user, g.db)
     else:
         return render_template('login.html', bad_session=True)
 
