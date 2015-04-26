@@ -6,8 +6,7 @@ from flask import Flask, abort, flash
 from flask import g, render_template, request, session, send_from_directory, redirect, url_for
 from itsdangerous import BadSignature
 from tools.home import home_page
-from tools.needed import e_post_images, a_post_images, r_post_images, get_data, user_image_page_select, \
-    user_image_page_get
+from tools.needed import e_post_images, a_post_images, r_post_images, get_data
 
 from tools.user_data import change_user_info, friends_data, unfriend, circles_page_db, circle_create, circle_edit, \
     circle_remove, circle_add_f, circle_remove_f, friends_posts_home, your_posts_home, create_post_db, \
