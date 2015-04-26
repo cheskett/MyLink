@@ -6,16 +6,6 @@ from flask import render_template
 __author__ = 'Shade390'
 
 
-def e_post_images(username, postid, db, added, removed, exists):
-    try:
-        # get images_used
-        #get_all_images
-        #post_images
-        return  #NO Template
-    except sqlite3.OperationalError:
-        traceback.print_exc()
-    return your_posts_home(username, db)
-
 #need imae daa
 def get_data(username,user, db):
     info = ()
@@ -32,9 +22,9 @@ def get_data(username,user, db):
 
 
 
-def user_image_page_get(username, db):
+def user_image_page_get(username, db, success):
     try:
-        return render_template('user_info.html')
+        return render_template('user_image_change.html', success=success)
     except sqlite3.OperationalError:
         traceback.print_exc()
     return home_page(username, db)
@@ -42,16 +32,26 @@ def user_image_page_get(username, db):
 def user_image_page_select(username,picid, db):
     try:
         c = db.cursor()
-        t = (username,picid)
-        c.execute('SELECT email, age, date, relationship, occupation, education, home, phone, desc FROM users WHERE email=?', t)
-        for row in c.fetchall():
-            info=info+row
-        return render_template('user_info.html', info=info)
+        t = (picid, username,)
+        #c.execute('SELECT email, age, date, relationship, occupation, education, home, phone, desc FROM users WHERE email=?', t)
+        c.execute('UPDATE users SET picid=? WHERE email=?',t)
+        db.commit()
+        return user_image_page_get(username, db, success=1)
     except sqlite3.OperationalError:
         traceback.print_exc()
-    return home_page(username, db)
+    return user_image_page_get(username, db, success=-1)
 
 #none after ------------------------------
+def e_post_images(username, postid, db, added, removed, exists):
+    try:
+        # get images_used
+        #get_all_images
+        #post_images
+        return  #NO Template
+    except sqlite3.OperationalError:
+        traceback.print_exc()
+    return your_posts_home(username, db)
+
 def a_post_images(username, postid, picid, db):
     try:
         c = db.cursor()
