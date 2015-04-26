@@ -420,6 +420,25 @@ def new_home_page():
         return render_template('login.html', bad_session=True)
 
 
+@app.route('/User_Image_Page', methods=['GET'])
+def user_image_page():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        return user_image_page_get(username, g.db)
+    else:
+        return render_template('login.html', bad_session=True)
+
+@app.route('/Change_User_Image', methods=['POST'])
+def change_user_image():
+    if mysession.check_session() == 'passed':
+        username = session['username']
+        picid = request.form["picid"]
+        return user_image_page_select(username,picid, g.db)
+    else:
+        return render_template('login.html', bad_session=True)
+
+
+
 @app.route('/user/<user>')
 def user_data_get(user):
     if mysession.check_session() == 'passed':

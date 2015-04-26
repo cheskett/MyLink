@@ -31,6 +31,26 @@ def get_data(username,user, db):
     return home_page(username, db)
 
 
+
+def user_image_page_get(username, db):
+    try:
+        return render_template('user_info.html')
+    except sqlite3.OperationalError:
+        traceback.print_exc()
+    return home_page(username, db)
+
+def user_image_page_select(username,picid, db):
+    try:
+        c = db.cursor()
+        t = (username,picid)
+        c.execute('SELECT email, age, date, relationship, occupation, education, home, phone, desc FROM users WHERE email=?', t)
+        for row in c.fetchall():
+            info=info+row
+        return render_template('user_info.html', info=info)
+    except sqlite3.OperationalError:
+        traceback.print_exc()
+    return home_page(username, db)
+
 #none after ------------------------------
 def a_post_images(username, postid, picid, db):
     try:
