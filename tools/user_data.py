@@ -3,7 +3,7 @@ import html
 import traceback
 from tools.login import change_col_db
 from flask import Flask, render_template, session, g, current_app as app, url_for
-from tools import pictures
+from tools import pictures, needed
 
 __author__ = 'Shade390'
 
@@ -66,7 +66,7 @@ def friends_data(username, db, bool):
             requests.append(row[0])
 
 
-        #requests from you
+        # requests from you
         c.execute('SELECT user2 FROM friends WHERE user1=? AND status=0', t)
         for row in c:
             requested.append(row[0])
@@ -287,11 +287,15 @@ def create_post_page_db(username, db, album=None):
     return render_template('post_create_page.html', pictures=pics, albums=albums)
 
 
-def create_post_db(username, postTitle, postText, db):
+def create_post_db(username, postTitle, postText, db, pictures=None):
     try:
         c = db.cursor()
         t = (username, postTitle, postText,)
         c.execute('INSERT into posts (user, postTitle, postText) VALUES (?,?,?)', t)
+        post_id = c.lastrowid
+        if pictures is not None:
+            for pic in pictures:
+                needed.a_post_images(username, post_id, pic, db)
         db.commit()
         return your_posts_home(username, db)
     except sqlite3.OperationalError:
@@ -364,12 +368,14 @@ def a_post_circles_db(username, cid, postid, db):
         traceback.print_exc()
     return your_posts_home(username, db)
 
+
 def change_info_get(username, db):
-    info=()
+    info = ()
     try:
         c = db.cursor()
         t = (username,)
-        c.execute('SELECT age, date, relationship, occupation, education, home, phone, desc FROM users WHERE email=?', t)
+        c.execute('SELECT age, date, relationship, occupation, education, home, phone, desc FROM users WHERE email=?',
+                  t)
         for row in c.fetchall():
             info = info + row
         return render_template('change_user_info_page.html', info=info)

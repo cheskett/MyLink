@@ -327,10 +327,10 @@ def create_post():
         username = session['username']
         postTitle = request.form["postTitle"]
         postText = request.form["postText"]
-        list = request.form["pictures"]
-        if list:
-            print(list)
-            return create_post_db(username, postTitle, postText, g.db)
+        print(postText)
+        picture_list = request.form.getlist("pictures")
+        if picture_list:
+            return create_post_db(username, postTitle, postText, g.db, picture_list)
         else:
             return create_post_db(username, postTitle, postText, g.db)
     else:
