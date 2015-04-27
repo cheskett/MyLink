@@ -9,22 +9,44 @@
 
 
     <ul class="">
-    <H3>Posts:</H3>
+        <H3>Posts:</H3>
         {% for post in posts %}
             <div style="border-radius: 3px" class="z-depth-1 white">
-                <H3 style="display: inline">{{ post.0 }} </H3>
+                <div style="border-radius: 3px; padding-bottom: 8px; margin-bottom: 5px"
+                     class="z-depth-1 container-fluid">
+                    <H6 style="display: inline; text-align: right"><a href="user/{{ post.1 }}">{{ post.1 }}</a></H6>
 
-                <H5 style="display: inline; text-align: right"><a href="user/{{post.1}}">By: {{ post.1 }}</a></H5>
-                <br>
-                {% for picture in post.3 %}
-                    <img src="{{ picture }}" alt="post_picture" style="width:300px;height:300px">
-                {% endfor %}
-                <p1>{{ post.2 }}</p1>
+                    <br>
+                </div>
+                <div class="container-fluid">
+                    <H5 style="text-align: center;">{{ post.0 }} </H5>
+                    <p1>{{ post.2 }}</p1>
+                </div>
+
+                <div id="masonry-grid" class="container-fluid masonry">
+                    {% for picture in post.3 %}
+                        <img class="grid-item"
+                             style="float: left; margin: 0px 0px 15px 15px; width: 180px; height: 180px"
+                             src="{{ picture }}" alt="post_picture"/>
+                        <!--<img src="{{ picture }}" alt="post_picture" style="width:300px;height:300px">-->
+                    {% endfor %}
+                </div>
+
             </div>
             <br>
         {% endfor %}
     </ul>
 
+    <script src="/static/scripts/masonry.pkgd.min.js"></script>
+    <script>
+        $(function () {
+            $('#masonry-grid').masonry({
+                // options
+                itemSelector: '.grid-item',
+                columnWidth: 10
+            });
+        });
+    </script>
 
 
 
