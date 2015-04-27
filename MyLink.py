@@ -180,7 +180,8 @@ def change_info_event():
     if mysession.check_session() == 'passed':
         username = session['username']
         form = request.form
-        change_user_info(username, form, g.db)
+        file = request.files['file']
+        change_user_info(username, form, g.db, file)
         return render_template('change_user_success.html')
     else:
         return render_template('login.html', bad_session=False)

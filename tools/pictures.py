@@ -78,3 +78,26 @@ def create_album(form):
     except:
         print_exc()
         flash("Error creating album")
+
+
+def get_user_profile_pic(username):
+    c = g.db.cursor()
+    t = (username,)
+    sql = "SELECT MAX(picid) FROM pictures WHERE album='Profile Pictures' AND owner = ?"
+    c.execute(sql, t)
+    data = c.fetchone()
+    if data is not None:
+        return data[0]
+    return None
+
+
+def get_profile_pic_path(picid):
+    c = g.db.cursor()
+    t = (picid,)
+    sql = "SELECT owner, path FROM pictures WHERE picid = ?"
+    c.execute(sql, t)
+    data = c.fetchone()
+    if data is not None:
+        path = os.path.join("/images", data[0], data[1])
+        return path
+    return None

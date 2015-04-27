@@ -12,9 +12,10 @@
         <H3>Posts:</H3>
         {% for post in posts %}
             <div style="border-radius: 3px" class="z-depth-1 white">
-                <div style="border-radius: 3px; padding-bottom: 8px; margin-bottom: 5px"
+                <div style="border-radius: 3px; padding-bottom: 8px; padding-top: 8px; margin-bottom: 5px"
                      class="z-depth-1 container-fluid">
-                    <H6 style="display: inline; text-align: right"><a href="user/{{ post.1 }}">{{ post.1 }}</a></H6>
+                    <img style="height: 50px; width: 50px" src="{{ post.4}}">
+                    <H5 style="display: inline; text-align: right"><a href="user/{{ post.1 }}">{{ post.1 }}</a></H5>
 
                     <br>
                 </div>

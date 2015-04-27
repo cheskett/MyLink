@@ -8,7 +8,7 @@ from tools import pictures, needed
 __author__ = 'Shade390'
 
 
-def change_user_info(username, form, db):
+def change_user_info(username, form, db, file):
     age = form['age']
     date = form['date']
     relationship = form['relationship']
@@ -42,6 +42,12 @@ def change_user_info(username, form, db):
     if phone:
         print('change phone: ' + phone)
         change_col_db(username, "phone", phone, db)
+    if file:
+        print('change profile pic')
+        pictures.upload_image(file, "Profile Pictures")
+        picid = pictures.get_user_profile_pic(username)
+        change_col_db(username, "picid", picid, db)
+
 
 
 def friends_data(username, db, bool):

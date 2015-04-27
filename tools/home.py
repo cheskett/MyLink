@@ -4,6 +4,8 @@ import traceback
 from flask import Flask, render_template, session, g, current_app as app, url_for
 
 import sqlite3
+from tools.pictures import get_user_profile_pic, get_profile_pic_path
+
 def home_page(username, db):
     posts = []
     try:
@@ -24,7 +26,9 @@ def home_page(username, db):
             for stuff in d.fetchall():
                 pic= "/images/" + stuff[0] +"/"+ stuff[1]
                 pictures.append(pic)
-            post = (row[0], row[1], row[2], pictures)
+            profileId = get_user_profile_pic(row[1])
+            profile_path = get_profile_pic_path(profileId)
+            post = (row[0], row[1], row[2], pictures, profile_path)
             posts.append(post)
         posts.reverse()
         return render_template('posts_home.html', posts=posts)
