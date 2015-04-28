@@ -2,20 +2,23 @@ import sqlite3
 import traceback
 from tools.user_data import your_posts_home
 from tools.home import home_page
+from tools.pictures import get_user_profile_pic, get_profile_pic_path
 from flask import render_template
 __author__ = 'Shade390'
 
 
 #need imae daa
-def get_data(username,user, db):
+def get_data(username, user, db):
     info = ()
     try:
         c = db.cursor()
         t = (user,)
         c.execute('SELECT email, age, date, relationship, occupation, education, home, phone, desc FROM users WHERE email=?', t)
+        picid = get_user_profile_pic(user)
+        pic = get_profile_pic_path(picid)
         for row in c.fetchall():
             info=info+row
-        return render_template('user_info.html', info=info)
+        return render_template('user_info.html', info=info, pic=pic)
     except sqlite3.OperationalError:
         traceback.print_exc()
     return home_page(username, db)

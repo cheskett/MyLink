@@ -4,30 +4,37 @@
     {{ super() }}
 {% endblock %}
 {% block body %}
-<H2 style="text-align: center">MyLink-User Info</H2>
+    <H2 style="text-align: center">MyLink-User Info</H2>
 
-<div class="container">
-    <H3>{{info.0}}:</H3>
-    <br>
-    <P1>Age: {{info.1}}</P1>
-    <br>
-    <P1>Date of Birth: {{info.2}}</P1>
-    <br>
-    <P1>Relationship Status: {{info.3}}</P1>
-    <br>
-    <P1>Occupation: {{info.4}}</P1>
-    <br>
-    <P1>Level of Education: {{info.5}}</P1>
-    <br>
-    <P1>Home Address: {{info.6}}</P1>
-    <br>
-    <P1>Phone Number: {{info.7}}</P1>
-    <br>
-    <P1>Desc: {{info.8}}</P1>
-    <br>
-    <FORM METHOD=get ACTION="/return">
-        <button type="submit" class="btn btn-default">Return</button>
-    </FORM>
-</div>
+    <div style="clear: none; float: left">
+        <div class="container" style="position: relative; display: inline-block; width: 400px">
+            <H3>{{ info.0 }}:</H3>
+            <br>
+            <P1>Age: {{ info.1 }}</P1>
+            <br>
+            <P1>Date of Birth: {{ info.2 }}</P1>
+            <br>
+            <P1>Relationship Status: {{ info.3 }}</P1>
+            <br>
+            <P1>Occupation: {{ info.4 }}</P1>
+            <br>
+            <P1>Level of Education: {{ info.5 }}</P1>
+            <br>
+            <P1>Home Address: {{ info.6 }}</P1>
+            <br>
+            <P1>Phone Number: {{ info.7 }}</P1>
+            <br>
+            <P1>Desc: {{ info.8 }}</P1>
+            <br>
+
+            <FORM METHOD=get ACTION="/return">
+                <button type="submit" class="btn btn-default">Return</button>
+            </FORM>
+        </div>
+
+        <div style="position: relative; display: inline-block;">
+            <img style="float: right; width: 200px; height: 200px" src="{{ pic }}">
+        </div>
+    </div>
 
 {% endblock %}
