@@ -42,7 +42,9 @@ def get_albums():
     sql = "SELECT * FROM albums WHERE owner = ?"
     c.execute(sql, user)
     albums = c.fetchall()
-    return albums
+    if albums is not None:
+        return albums
+    return []
 
 
 def get_pictures(user, album):
@@ -52,7 +54,9 @@ def get_pictures(user, album):
     sql = "SELECT * FROM pictures WHERE owner = ? and album= ?"
     c.execute(sql, t)
     pictures = c.fetchall()
-    return pictures
+    if pictures is not None:
+        return pictures
+    return []
 
 
 def get_first_user_album():
@@ -61,8 +65,10 @@ def get_first_user_album():
     sql = "SELECT name FROM albums WHERE owner = ?"
     c.execute(sql, t)
     album = c.fetchone()
-    album = album[0]
-    return album
+    if album is not None:
+        album = album[0]
+        return album
+    return None
 
 
 def create_album(form):

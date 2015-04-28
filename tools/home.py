@@ -1,7 +1,7 @@
 __author__ = 'Shade390'
 import traceback
 
-from flask import Flask, render_template, session, g, current_app as app, url_for
+from flask import Flask, redirect, render_template, session, g, current_app as app, url_for
 
 import sqlite3
 from tools.pictures import get_user_profile_pic, get_profile_pic_path
@@ -14,7 +14,7 @@ def home_page(username, db):
         t = (username, username, username,)
         c.execute('SELECT DISTINCT postTitle, user, postText, p.postid  \
                     FROM Posts p \
-                    INNER JOIN postTarget pt on p.postid = pt.postid \
+                    LEFT JOIN postTarget pt on p.postid = pt.postid \
                     OR p.user = ? \
                     WHERE (cid IN(SELECT cid From circle_members WHERE user=?) OR p.user = ?)', t)
         for row in c.fetchall():
