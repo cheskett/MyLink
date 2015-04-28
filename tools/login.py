@@ -21,7 +21,7 @@ def register_user(user, passwd, pass2):
     is_valid = validate_email(user)
     if is_valid & (passwd == pass2):
         tup = (user,)
-        c.execute('Select email from users WHERE email=?',tup)
+        c.execute('Select email from users WHERE email=?', tup)
         for row in c:
             return render_template('register.html', error='Username already exists')
         tup = (user, passwd, 'N')
@@ -80,7 +80,7 @@ def check_password(user, passwd, db):
         c.execute("SELECT * FROM users  WHERE email=? AND active='Y'", t)
 
         row = stored_password = c.fetchone()
-        #conn.close()
+        # conn.close()
 
         if row:
             stored_password = row[1]
@@ -96,7 +96,7 @@ def create_new_session(user):
 
 
 # def show_image(form):
-#     if mysession.check_session(form) != "passed":
+# if mysession.check_session(form) != "passed":
 #         return login_form()
 #
 #     # Your code should get the user album and picture and verify that the image belongs to this
@@ -133,7 +133,7 @@ def change_password_db(user, passwd, db):
         conn = db
         c = conn.cursor()
 
-        t = (passwd,user,)
+        t = (passwd, user,)
         c.execute('UPDATE users SET password=? WHERE email=?', t)
         conn.commit()
 
@@ -147,8 +147,7 @@ def change_col_db(user, col, input, db):
         conn = db
         c = conn.cursor()
 
-
-        t = (input,user)
+        t = (input, user)
         c.execute('UPDATE users SET {}=? WHERE email=?'.format(col), t)
         conn.commit()
 

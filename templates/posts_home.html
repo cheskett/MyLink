@@ -5,39 +5,52 @@
 {% endblock %}
 {% block body %}
 
-    <H2 style="text-align: center">MyLink Home</H2>
 
 
-    <ul class="">
-        <H3>Posts:</H3>
-        {% for post in posts %}
-            <div style="border-radius: 3px" class="z-depth-1 white">
-                <div style="border-radius: 3px; padding-bottom: 8px; padding-top: 8px; margin-bottom: 5px"
-                     class="z-depth-1 container-fluid">
-                    <img style="height: 50px; width: 50px" src="{{ post.4}}">
-                    <H5 style="display: inline; text-align: right"><a href="user/{{ post.1 }}">{{ post.1 }}</a></H5>
+    <div style="margin-bottom: 15px;">
+        <H3 style="text-align: center; width: 70%; display: inline-block">MyLink Home</H3>
 
-                    <br>
+        <div style="float: right; width: 29%; margin-top: 30px">
+            <form style="margin-bottom: 10px" action="/Create_Post_Page">
+
+                <button class="btn btn-primary">Create Post</button>
+
+            </form>
+        </div>
+    </div>
+
+    <div style="border-radius: 5px; margin-top: 15px; background: lightgrey; padding: 20px 20px 5px 20px;">
+
+        <ul class="">
+            {% for post in posts %}
+                <div style="border-radius: 3px" class="z-depth-1 white">
+                    <div style="border-radius: 3px; padding-bottom: 8px; padding-top: 8px; margin-bottom: 5px"
+                         class="z-depth-1 container-fluid">
+                        <img style="height: 60px; width: 60px" src="{{ post.4 }}">
+                        <H5 style="display: inline; text-align: right"><a href="user/{{ post.1 }}">{{ post.1 }}</a></H5>
+
+                        <br>
+                    </div>
+                    <div class="container-fluid">
+                        <H5 style="text-align: center;">{{ post.0 }} </H5>
+                        <p style="font-size: 1.5em">{{ post.2 }}</p>
+                    </div>
+
+                    <div id="masonry-grid" class="container-fluid masonry">
+                        {% for picture in post.3 %}
+                            <img class="grid-item"
+                                 style="float: left; margin: 0px 0px 15px 15px; width: 180px; height: 180px"
+                                 src="{{ picture }}" alt="post_picture"/>
+                            <!--<img src="{{ picture }}" alt="post_picture" style="width:300px;height:300px">-->
+                        {% endfor %}
+                    </div>
+
                 </div>
-                <div class="container-fluid">
-                    <H5 style="text-align: center;">{{ post.0 }} </H5>
-                    <p1>{{ post.2 }}</p1>
-                </div>
+                <br>
+            {% endfor %}
+        </ul>
 
-                <div id="masonry-grid" class="container-fluid masonry">
-                    {% for picture in post.3 %}
-                        <img class="grid-item"
-                             style="float: left; margin: 0px 0px 15px 15px; width: 180px; height: 180px"
-                             src="{{ picture }}" alt="post_picture"/>
-                        <!--<img src="{{ picture }}" alt="post_picture" style="width:300px;height:300px">-->
-                    {% endfor %}
-                </div>
-
-            </div>
-            <br>
-        {% endfor %}
-    </ul>
-
+    </div>
     <script src="/static/scripts/masonry.pkgd.min.js"></script>
     <script>
         $(function () {

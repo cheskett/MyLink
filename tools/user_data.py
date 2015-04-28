@@ -303,7 +303,7 @@ def create_post_db(username, postTitle, postText, db, pictures=None):
             for pic in pictures:
                 needed.a_post_images(username, post_id, pic, db)
         db.commit()
-        return your_posts_home(username, db)
+        return needed.home_page(username, db)
     except sqlite3.OperationalError:
         traceback.print_exc()
     return render_template('post_create_page.html')
